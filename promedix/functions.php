@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PROMEDIX_VERSION', '1.2.0' );
+define( 'PROMEDIX_VERSION', '1.2.1' );
 
 require_once get_theme_file_path( 'inc/helpers.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
@@ -80,3 +80,11 @@ function promedix_pattern_categories() {
 	register_block_pattern_category( 'promedix-b2b', array( 'label' => __( 'ProMedix: гурт', 'promedix' ) ) );
 }
 add_action( 'init', 'promedix_pattern_categories' );
+
+/**
+ * Shortcodes inside theme patterns ([products], [promedix_phone], …):
+ * the pattern block is rendered after the template's shortcode pass, so run it here.
+ */
+add_filter( 'render_block_core/pattern', function ( $content ) {
+	return ( false !== strpos( $content, '[' ) ) ? do_shortcode( $content ) : $content;
+} );
