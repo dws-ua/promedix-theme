@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PROMEDIX_VERSION', '1.2.1' );
+define( 'PROMEDIX_VERSION', '2.0.0' );
 
 require_once get_theme_file_path( 'inc/helpers.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
@@ -48,7 +48,7 @@ add_action( 'after_setup_theme', 'promedix_setup' );
  * TODO: self-host the fonts in assets/fonts for performance and GDPR.
  */
 function promedix_fonts_url() {
-	return 'https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Inter:wght@400;500;600&display=swap';
+	return 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap';
 }
 
 /**

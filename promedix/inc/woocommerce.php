@@ -332,3 +332,83 @@ add_filter( 'woocommerce_single_product_carousel_options', function ( $o ) {
 add_filter( 'woocommerce_reset_variations_link', function () {
 	return '<a class="reset_variations" href="#" aria-label="' . esc_attr__( 'Скинути вибір', 'promedix' ) . '">' . esc_html__( 'Скинути', 'promedix' ) . '</a>';
 } );
+
+/* ---------------------------------------------------------------------------
+ * 2.0: cards from the new reference (short title, colour swatches, "грн").
+ * ------------------------------------------------------------------------- */
+
+/** Prices read "1 259 грн" instead of "1 259 ₴". */
+add_filter( 'woocommerce_currency_symbol', function ( $symbol, $currency ) {
+	return 'UAH' === $currency ? 'грн' : $symbol;
+}, 10, 2 );
+
+/** Short card title: "Жіночі сабо ProMedix 708 Білі" → "ProMedix 708 Білі". */
+function promedix_short_title( $title ) {
+	$pos = mb_stripos( $title, 'ProMedix' );
+	return ( false !== $pos && $pos > 0 ) ? mb_substr( $title, $pos ) : $title;
+}
+remove_action( 'woocommerce_shop_loop_item_title', 'woocommerce_template_loop_product_title', 10 );
+add_action( 'woocommerce_shop_loop_item_title', function () {
+	echo '<h2 class="' . esc_attr( apply_filters( 'woocommerce_product_loop_title_classes', 'woocommerce-loop-product__title' ) ) . '">' . esc_html( promedix_short_title( get_the_title() ) ) . '</h2>';
+}, 10 );
+
+/**
+ * Products of the same model ("promedix-707-bili", "promedix-707-rozhevi") grouped by model number.
+ * Cached for 12 hours; cleared when a product is saved.
+ */
+function promedix_model_map() {
+	$map = get_transient( 'promedix_model_map' );
+	if ( is_array( $map ) ) {
+		return $map;
+	}
+	$map = array();
+	$ids = get_posts( array(
+		'post_type'        => 'product',
+		'post_status'      => 'publish',
+		'posts_per_page'   => 300,
+		'fields'           => 'ids',
+		'orderby'          => 'menu_order title',
+		'order'            => 'ASC',
+		'suppress_filters' => false,
+	) );
+	foreach ( $ids as $id ) {
+		$slug = get_post_field( 'post_name', $id );
+		if ( preg_match( '/promedix-(\d{3})/', $slug, $m ) ) {
+			$map[ $m[1] ][] = (int) $id;
+		}
+	}
+	set_transient( 'promedix_model_map', $map, 12 * HOUR_IN_SECONDS );
+	return $map;
+}
+add_action( 'save_post_product', function () {
+	delete_transient( 'promedix_model_map' );
+} );
+
+function promedix_swatches( $product_id, $max = 3 ) {
+	$slug = get_post_field( 'post_name', $product_id );
+	if ( ! preg_match( '/promedix-(\d{3})/', $slug, $m ) ) {
+		return '';
+	}
+	$map  = promedix_model_map();
+	$ids  = isset( $map[ $m[1] ] ) ? $map[ $m[1] ] : array();
+	if ( count( $ids ) < 2 ) {
+		return '';
+	}
+	$ids  = array_values( array_unique( array_merge( array( (int) $product_id ), $ids ) ) );
+	$more = count( $ids ) - $max;
+	$out  = '<span class="pmx-swatches">';
+	foreach ( array_slice( $ids, 0, $max ) as $id ) {
+		$img = get_the_post_thumbnail_url( $id, 'woocommerce_gallery_thumbnail' );
+		$cls = 'pmx-swatch' . ( $id === (int) $product_id ? ' is-current' : '' );
+		$out .= '<a class="' . $cls . '" href="' . esc_url( get_permalink( $id ) ) . '" title="' . esc_attr( promedix_short_title( get_the_title( $id ) ) ) . '"' . ( $img ? ' style="background-image:url(' . esc_url( $img ) . ')"' : '' ) . '><span class="pmx-visually-hidden">' . esc_html( get_the_title( $id ) ) . '</span></a>';
+	}
+	if ( $more > 0 ) {
+		$out .= '<span class="pmx-swatch-more">+' . (int) $more . '</span>';
+	}
+	return $out . '</span>';
+}
+
+/* Card footer: title + price on the left, swatches on the right. */
+add_action( 'woocommerce_after_shop_loop_item', function () {
+	echo promedix_swatches( get_the_ID() ); // phpcs:ignore WordPress.Security.EscapeOutput
+}, 7 );

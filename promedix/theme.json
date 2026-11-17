@@ -5,7 +5,7 @@
     "appearanceTools": true,
     "useRootPaddingAwareAlignments": true,
     "layout": {
-      "contentSize": "760px",
+      "contentSize": "1180px",
       "wideSize": "1180px"
     },
     "color": {
@@ -16,72 +16,72 @@
         {
           "slug": "ink",
           "name": "Графіт (текст)",
-          "color": "#232A2C"
+          "color": "#1E2B31"
         },
         {
           "slug": "primary",
-          "name": "Сталевий темний",
-          "color": "#3E6E7A"
+          "name": "Глибокий бірюзовий",
+          "color": "#2C5A6A"
         },
         {
           "slug": "steel",
-          "name": "Сталевий",
-          "color": "#4A7A85"
+          "name": "Бірюзовий",
+          "color": "#3E6F80"
         },
         {
           "slug": "primary-dark",
-          "name": "Сталевий глибокий",
-          "color": "#2F5966"
+          "name": "Бірюзовий темний",
+          "color": "#214756"
         },
         {
           "slug": "mint",
-          "name": "Пісочний (банери)",
-          "color": "#EDE5DA"
+          "name": "Небесний (банери)",
+          "color": "#E7F0F8"
         },
         {
           "slug": "beige",
-          "name": "Бежевий (плитки фото)",
-          "color": "#F3EEE7"
+          "name": "Блакитний (тло фото)",
+          "color": "#D0E5F8"
         },
         {
           "slug": "mint-deep",
-          "name": "Шавлія",
-          "color": "#E4EBE6"
+          "name": "Світло-блакитний",
+          "color": "#EEF4F9"
         },
         {
           "slug": "surface",
-          "name": "Кремове тло",
-          "color": "#FAF8F5"
+          "name": "Біле тло",
+          "color": "#FFFFFF"
         },
         {
           "slug": "line",
           "name": "Лінія",
-          "color": "#E8E1D7"
+          "color": "#E2EAF0"
         },
         {
           "slug": "line-strong",
           "name": "Лінія полів",
-          "color": "#DAD1C4"
+          "color": "#C9D7E2"
         },
         {
           "slug": "muted",
           "name": "Приглушений текст",
-          "color": "#6B6F6E"
+          "color": "#65737A"
         },
         {
           "slug": "body",
           "name": "Основний текст",
-          "color": "#4D5456"
+          "color": "#3D4A51"
         },
         {
           "slug": "accent",
-          "name": "Теракота (бейджі)",
-          "color": "#A8402A"
+          "name": "Жовтий акцент",
+          "color": "#F2C230"
         },
         {
           "slug": "on-dark",
           "name": "Текст на темному",
-          "color": "#E4EBE6"
+          "color": "#E7F0F8"
         },
         {
           "slug": "white",
@@ -96,8 +96,8 @@
       "fontFamilies": [
         {
           "slug": "heading",
-          "name": "Lora",
-          "fontFamily": "Lora, Georgia, 'Times New Roman', serif"
+          "name": "Montserrat",
+          "fontFamily": "Montserrat, 'Helvetica Neue', Arial, sans-serif"
         },
         {
           "slug": "body",
@@ -243,9 +243,9 @@
       "heading": {
         "typography": {
           "fontFamily": "var(--wp--preset--font-family--heading)",
-          "fontWeight": "500",
-          "lineHeight": "1.15",
-          "letterSpacing": "0"
+          "fontWeight": "700",
+          "lineHeight": "1.12",
+          "letterSpacing": "-0.01em"
         }
       },
       "h1": {
@@ -270,10 +270,10 @@
           "text": "var(--wp--preset--color--white)"
         },
         "border": {
-          "radius": "4px"
+          "radius": "6px"
         },
         "typography": {
-          "fontWeight": "500",
+          "fontWeight": "600",
           "fontSize": "var(--wp--preset--font-size--md)"
         },
         "spacing": {

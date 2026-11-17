@@ -163,3 +163,49 @@ function promedix_sc_logo( $atts ) {
 		. '<img src="' . esc_url( get_theme_file_uri( 'assets/img/' . $file ) ) . '" alt="ProMedix" height="' . (int) $atts['height'] . '" style="height:' . (int) $atts['height'] . 'px;width:auto;display:block"></a>';
 }
 add_shortcode( 'promedix_logo', 'promedix_sc_logo' );
+
+/**
+ * [promedix_picker]: "Знайдемо вашу пару?" — who it is for + size → catalog with the size filter.
+ * Without JS the form opens the shop filtered by size.
+ */
+add_shortcode( 'promedix_picker', function () {
+	$shop = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
+	$who  = apply_filters( 'promedix_picker_groups', array(
+		'medychne-vzuttia'   => __( 'Медикам', 'promedix' ),
+		'zhinochi-sabo'      => __( 'Жінкам', 'promedix' ),
+		'cholovichi-sabo'    => __( 'Чоловікам', 'promedix' ),
+		'kroksy-anatomichni' => __( 'Для щоденної роботи', 'promedix' ),
+	) );
+	$sizes = taxonomy_exists( 'pa_size' ) ? get_terms( array( 'taxonomy' => 'pa_size', 'hide_empty' => true ) ) : array();
+	if ( is_wp_error( $sizes ) ) {
+		$sizes = array();
+	}
+	usort( $sizes, function ( $a, $b ) {
+		return (float) $a->name <=> (float) $b->name;
+	} );
+	ob_start();
+	?>
+	<form class="pmx-picker alignwide" action="<?php echo esc_url( $shop ); ?>" method="get" data-pmx-picker>
+		<h2 class="pmx-picker__title"><?php esc_html_e( 'Знайдемо вашу пару?', 'promedix' ); ?></h2>
+		<label class="pmx-picker__field"><span class="pmx-visually-hidden"><?php esc_html_e( 'Для кого', 'promedix' ); ?></span>
+			<select data-pmx-picker-cat>
+				<option value="<?php echo esc_url( $shop ); ?>"><?php esc_html_e( 'Ваша професія', 'promedix' ); ?></option>
+				<?php foreach ( $who as $slug => $label ) : ?>
+					<option value="<?php echo esc_url( promedix_term_url( $slug ) ); ?>"><?php echo esc_html( $label ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+		<label class="pmx-picker__field"><span class="pmx-visually-hidden"><?php esc_html_e( 'Розмір', 'promedix' ); ?></span>
+			<select name="filter_size">
+				<option value=""><?php esc_html_e( 'Ваш розмір', 'promedix' ); ?></option>
+				<?php foreach ( $sizes as $t ) : ?>
+					<option value="<?php echo esc_attr( $t->slug ); ?>"><?php echo esc_html( $t->name ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</label>
+		<input type="hidden" name="query_type_size" value="or">
+		<button class="pmx-btn pmx-arrow-btn" type="submit"><?php esc_html_e( 'Підібрати', 'promedix' ); ?></button>
+	</form>
+	<?php
+	return ob_get_clean();
+} );

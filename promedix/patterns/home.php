@@ -7,8 +7,10 @@
  */
 ?>
 <!-- wp:pattern {"slug":"promedix/home-hero"} /-->
-<!-- wp:pattern {"slug":"promedix/audience"} /-->
+<!-- wp:pattern {"slug":"promedix/professions"} /-->
 <!-- wp:pattern {"slug":"promedix/products"} /-->
-<!-- wp:pattern {"slug":"promedix/benefits"} /-->
+<!-- wp:pattern {"slug":"promedix/character"} /-->
+<!-- wp:pattern {"slug":"promedix/picker"} /-->
+<!-- wp:pattern {"slug":"promedix/team-strip"} /-->
 <!-- wp:pattern {"slug":"promedix/wholesale-form"} /-->
 <!-- wp:pattern {"slug":"promedix/seo-text"} /-->

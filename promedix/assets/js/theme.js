@@ -106,3 +106,20 @@
   }
   document.querySelectorAll('form.variations_form').forEach(buildTiles);
 })();
+
+/* "Знайдемо вашу пару?": category select changes where the form goes; empty size is dropped. */
+(function () {
+  document.addEventListener('submit', function (e) {
+    var f = e.target.closest && e.target.closest('[data-pmx-picker]');
+    if (!f) return;
+    e.preventDefault();
+    var cat = f.querySelector('[data-pmx-picker-cat]');
+    var size = f.querySelector('[name="filter_size"]');
+    var url = new URL(cat && cat.value ? cat.value : f.action, location.href);
+    if (size && size.value) {
+      url.searchParams.set('filter_size', size.value);
+      url.searchParams.set('query_type_size', 'or');
+    }
+    location.href = url.toString();
+  });
+})();
