@@ -1,0 +1,35 @@
+<!-- wp:template-part {"slug":"header","area":"header","tagName":"div"} /-->
+
+<!-- wp:group {"tagName":"main","className":"pmx-main","style":{"spacing":{"padding":{"top":"40px","bottom":"72px"}}},"layout":{"type":"constrained"}} -->
+<main class="wp-block-group pmx-main" style="padding-top:40px;padding-bottom:72px"><!-- wp:query-title {"type":"search","align":"wide"} /-->
+
+<!-- wp:search {"label":"Пошук","showLabel":false,"buttonText":"Шукати","align":"wide"} /-->
+
+<!-- wp:query {"queryId":1,"query":{"perPage":12,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"align":"wide"} -->
+<div class="wp-block-query alignwide"><!-- wp:post-template {"className":"pmx-post-grid","layout":{"type":"grid","columnCount":3}} -->
+<!-- wp:group {"className":"pmx-post-card","layout":{"type":"flex","orientation":"vertical"}} -->
+<div class="wp-block-group pmx-post-card"><!-- wp:post-featured-image {"isLink":true,"aspectRatio":"16/10","style":{"border":{"radius":"16px"}}} /-->
+
+<!-- wp:post-date {"fontSize":"xs","textColor":"muted"} /-->
+
+<!-- wp:post-title {"isLink":true,"level":2,"fontSize":"lg"} /-->
+
+<!-- wp:post-excerpt {"excerptLength":20,"fontSize":"sm","textColor":"body"} /--></div>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+
+<!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
+<!-- wp:query-pagination-previous /-->
+<!-- wp:query-pagination-numbers /-->
+<!-- wp:query-pagination-next /-->
+<!-- /wp:query-pagination -->
+
+<!-- wp:query-no-results -->
+<!-- wp:paragraph -->
+<p>Нічого не знайдено.</p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results --></div>
+<!-- /wp:query --></main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","area":"footer","tagName":"div"} /-->

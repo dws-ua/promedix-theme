@@ -1,0 +1,31 @@
+Contact Form 7: create a form titled exactly "Гуртова заявка ProMedix".
+(The theme finds it by title. For the RU version, translate the form in WPML.)
+
+--- Form tab ---
+<label>Хто ви
+[select* kind "Клініка або лікарня" "Аптека" "Лабораторія" "Стоматологія або салон" "Дилер / магазин" "Інше"]</label>
+<label>Назва закладу або компанії
+[text* org autocomplete:organization]</label>
+<label>Місто
+[text city]</label>
+<label>Орієнтовна кількість пар
+[number qty min:1]</label>
+<label>Контактна особа
+[text* name autocomplete:name]</label>
+<label>Телефон
+[tel* phone autocomplete:tel placeholder "+38 0__ ___ __ __"]</label>
+<label>Коментар
+[textarea comment x3 placeholder "Які моделі цікавлять, терміни"]</label>
+[submit "Надіслати заявку"]
+
+--- Mail tab ---
+To: zakaz@promedix.com.ua
+Subject: Гуртова заявка: [org] ([kind])
+Reply-To: (leave empty or set an email field if you add one)
+Body:
+Тип: [kind]
+Заклад: [org]
+Місто: [city]
+Кількість пар: [qty]
+Контакт: [name], [phone]
+Коментар: [comment]
