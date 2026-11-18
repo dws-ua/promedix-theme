@@ -146,8 +146,30 @@ function promedix_current_title() {
 	return get_the_title();
 }
 
+/** Buttons under a page-hero lead: retail first, team/wholesale second. */
+function promedix_hero_cta( $type ) {
+	$tel   = 'tel:' . promedix_contact( 'phone_wholesale_href' );
+	$teams = promedix_link( 'teams' );
+	$b     = array();
+	if ( 'profession' === $type ) {
+		$b[] = array( '#pmx-pick', __( 'Обрати взуття', 'promedix' ), 'pmx-btn' );
+		$b[] = array( $teams ? $teams . '#pmx-form' : $tel, __( 'Ціна для всієї команди', 'promedix' ), 'pmx-btn pmx-btn--secondary' );
+	} elseif ( 'teams' === $type ) {
+		$b[] = array( '#pmx-form', __( 'Обговорити замовлення', 'promedix' ), 'pmx-btn' );
+		$b[] = array( $tel, promedix_contact( 'phone_wholesale' ), 'pmx-btn pmx-btn--secondary' );
+	}
+	if ( ! $b ) {
+		return '';
+	}
+	$h = '<div class="pmx-page-hero__cta">';
+	foreach ( $b as $i => $x ) {
+		$h .= '<a class="' . esc_attr( $x[2] ) . '" href="' . esc_url( $x[0] ) . '">' . esc_html( $x[1] ) . ( 0 === $i ? promedix_ui_icon( 'arrow', 20 ) : '' ) . '</a>';
+	}
+	return $h . '</div>';
+}
+
 add_shortcode( 'promedix_page_hero', function ( $atts ) {
-	$atts  = shortcode_atts( array( 'title' => '', 'lead' => '', 'image' => '', 'crumbs' => '1', 'size' => '' ), $atts, 'promedix_page_hero' );
+	$atts  = shortcode_atts( array( 'title' => '', 'lead' => '', 'image' => '', 'crumbs' => '1', 'size' => '', 'cta' => '' ), $atts, 'promedix_page_hero' );
 	$title = $atts['title'] ? $atts['title'] : promedix_current_title();
 	$words = preg_split( '/\s+/u', trim( $title ) );
 	if ( count( $words ) > 1 ) {
@@ -164,19 +186,28 @@ add_shortcode( 'promedix_page_hero', function ( $atts ) {
 	$person = false;
 	$image  = $atts['image'];
 	if ( 'profession' === $image ) {
-		$map   = array( 'dlia-medykiv' => 'doctor', 'dlia-perukariv' => 'barber', 'dlia-biuti-maistriv' => 'beauty' );
+		$map   = array( 'dlia-medykiv' => 'nurse', 'dlia-perukariv' => 'barber', 'dlia-biuti-maistriv' => 'beauty' );
 		$slug  = get_post_field( 'post_name', get_queried_object_id() );
-		$image = 'theme:people/' . ( isset( $map[ $slug ] ) ? 'person-' . $map[ $slug ] : 'team' ) . '.webp';
+		$image = 'scene:' . ( isset( $map[ $slug ] ) ? $map[ $slug ] : 'team' );
+	}
+	$scene = '';
+	if ( 0 === strpos( $image, 'scene:' ) ) {
+		$k     = sanitize_key( substr( $image, 6 ) );
+		$big   = get_theme_file_uri( 'assets/img/scenes/scene-' . $k . '.webp' );
+		$small = get_theme_file_uri( 'assets/img/scenes/scene-' . $k . '-900.webp' );
+		$scene = '<picture class="pmx-page-hero__scene"><source media="(max-width: 760px)" srcset="' . esc_url( $small ) . '"><img src="' . esc_url( $big ) . '" alt="" width="1536" height="1024" fetchpriority="high"></picture>';
+		$image = '';
 	}
 	if ( $image ) {
 		$person = 0 === strpos( $image, 'theme:people/' );
 		$src    = 0 === strpos( $image, 'theme:' ) ? get_theme_file_uri( 'assets/img/' . substr( $image, 6 ) ) : promedix_upload( $image );
 		$img    = '<figure class="pmx-page-hero__img' . ( $person ? ' is-person' : '' ) . '"><img src="' . esc_url( $src ) . '" alt="" width="520" height="520" fetchpriority="high"></figure>';
 	}
-	return '<header class="pmx-page-hero' . ( $img ? ' has-image' : '' ) . ( $person ? ' has-person' : '' ) . ( $atts['size'] ? ' pmx-page-hero--' . sanitize_html_class( $atts['size'] ) : '' ) . '"><div class="pmx-container pmx-page-hero__in"><div class="pmx-page-hero__text">' . $crumbs
+	return '<header class="pmx-page-hero' . ( $img ? ' has-image' : '' ) . ( $person ? ' has-person' : '' ) . ( $scene ? ' has-scene' : '' ) . ( $atts['size'] ? ' pmx-page-hero--' . sanitize_html_class( $atts['size'] ) : '' ) . '"><div class="pmx-container pmx-page-hero__in"><div class="pmx-page-hero__text">' . $crumbs
 		. '<h1 class="pmx-page-hero__title">' . $title . '</h1>'
 		. ( $atts['lead'] ? '<p class="pmx-page-hero__lead">' . esc_html( $atts['lead'] ) . '</p>' : '' )
-		. '</div>' . $img . '</div></header>';
+		. promedix_hero_cta( $atts['cta'] )
+		. '</div>' . $img . '</div>' . $scene . '</header>';
 } );
 
 /* ---------------------------------------------------------------------------
@@ -557,7 +588,7 @@ add_shortcode( 'promedix_profession', function ( $atts ) {
 	$products = $p['cat'] ? '[products limit="4" columns="4" category="' . esc_attr( $p['cat'] ) . '" orderby="popularity" visibility="visible"]' : '[products limit="4" columns="4" orderby="popularity" visibility="visible"]';
 	$c        = promedix_contacts();
 	return '<div class="pmx-container pmx-prof-page">' . $tabs
-		. '<section class="pmx-block"><h2>' . esc_html__( 'Оберіть свою пару', 'promedix' ) . '</h2>' . do_shortcode( $products ) . '</section>'
+		. '<section class="pmx-block" id="pmx-pick"><h2>' . esc_html__( 'Оберіть свою пару', 'promedix' ) . '</h2>' . do_shortcode( $products ) . '</section>'
 		. '<section class="pmx-block pmx-sizehelp"><div><h2>' . esc_html__( 'Потрібна допомога з розміром?', 'promedix' ) . '</h2><p>' . esc_html__( 'Підкажемо, як обрати розмір, щоб було комфортно весь робочий день.', 'promedix' ) . '</p>'
 		. '<a class="pmx-btn pmx-btn--secondary" href="tel:' . esc_attr( $c['phone_retail_href'] ) . '">' . promedix_ui_icon( 'phone', 20 ) . esc_html( $c['phone_retail'] ) . '</a></div></section></div>';
 } );

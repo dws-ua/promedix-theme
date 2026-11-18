@@ -50,7 +50,11 @@ $slide = function ( $args ) {
 
 <!-- wp:image {"sizeSlug":"large","className":"pmx-slide__img pmx-slide__img--<?php echo (int) $i + 1; ?>"} -->
 <figure class="wp-block-image size-large pmx-slide__img pmx-slide__img--<?php echo (int) $i + 1; ?>"><img src="<?php echo esc_url( promedix_upload( $img ) ); ?>" alt="<?php echo esc_attr( 0 === $i ? $args['alt'] : '' ); ?>"<?php echo $args['h1'] && 0 === $i ? ' fetchpriority="high"' : ' loading="lazy"'; ?>/></figure>
-<!-- /wp:image --><?php endforeach; ?><?php if ( ! empty( $args['person'] ) ) : ?>
+<!-- /wp:image --><?php endforeach; ?><?php if ( ! empty( $args['card'] ) ) : ?>
+
+<!-- wp:image {"className":"pmx-slide__card"} -->
+<figure class="wp-block-image pmx-slide__card"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/img/scenes/' . $args['card'] ) ); ?>" alt=""<?php echo $args['h1'] ? ' fetchpriority="high"' : ' loading="lazy"'; ?>/></figure>
+<!-- /wp:image --><?php endif; ?><?php if ( ! empty( $args['person'] ) ) : ?>
 
 <!-- wp:image {"className":"pmx-slide__person"} -->
 <figure class="wp-block-image pmx-slide__person"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/img/people/' . $args['person'] ) ); ?>" alt=""<?php echo $args['h1'] ? ' fetchpriority="high"' : ' loading="lazy"'; ?>/></figure>
@@ -81,7 +85,7 @@ echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
 	'url2'    => '#pmx-picker',
 	'num'     => '707',
 	'imgs'    => array( '2025/01/1-5-1024x1024.png' ),
-	'person'  => 'person-nurse.webp',
+	'card'    => 'card-nurse.webp',
 	'alt'     => __( 'Білі медичні сабо ProMedix 707', 'promedix' ),
 	'caption' => 'ProMedix 707',
 ) );
@@ -110,7 +114,7 @@ echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
 	'url2'    => $shop,
 	'num'     => 'B2B',
 	'imgs'    => array(),
-	'person'  => 'team.webp',
+	'card'    => 'card-team.webp',
 	'alt'     => __( 'Сабо ProMedix для всієї команди', 'promedix' ),
 	'caption' => __( 'Для клінік і салонів', 'promedix' ),
 ) );

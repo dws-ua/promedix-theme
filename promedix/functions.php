@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PROMEDIX_VERSION', '3.1.0' );
+define( 'PROMEDIX_VERSION', '3.2.0' );
 
 require_once get_theme_file_path( 'inc/helpers.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
