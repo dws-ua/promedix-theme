@@ -386,9 +386,12 @@ function promedix_page_content( $key ) {
 		return '';
 	}
 	$page = get_post( promedix_wpml_id( $page->ID, 'page' ) );
-	$html = apply_filters( 'the_content', $page->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-	// The page hero already holds the only H1: demote headings inside the old page text.
-	return preg_replace( array( '#<h1(\s|>)#i', '#</h1>#i' ), array( '<h2$1', '</h2>' ), $html );
+	return promedix_demote_h1( apply_filters( 'the_content', $page->post_content ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+}
+
+/** The page hero already holds the only H1: demote headings inside old page text. */
+function promedix_demote_h1( $html ) {
+	return preg_replace( array( '#<h1(\s|>)#i', '#</h1>#i' ), array( '<h2$1', '</h2>' ), (string) $html );
 }
 
 add_shortcode( 'promedix_help', function () {
@@ -427,7 +430,7 @@ add_shortcode( 'promedix_help', function () {
 	// The shop's own page texts (Оплата і доставка / Обмін та повернення) are shown as they are.
 	$page_text = '';
 	if ( $current === $slugs['delivery'] || $current === $slugs['exchange'] ) {
-		$page_text = apply_filters( 'the_content', get_post_field( 'post_content', get_the_ID() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+		$page_text = promedix_demote_h1( apply_filters( 'the_content', get_post_field( 'post_content', get_the_ID() ) ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 	}
 	if ( $page_text && $current === $slugs['delivery'] ) {
 		$body .= '<section class="pmx-help__sec pmx-prose">' . $page_text . '</section>';
