@@ -190,6 +190,13 @@ add_shortcode( 'promedix_page_hero', function ( $atts ) {
 		$slug  = get_post_field( 'post_name', get_queried_object_id() );
 		$image = 'scene:' . ( isset( $map[ $slug ] ) ? $map[ $slug ] : 'team' );
 	}
+	if ( 'landing' === $image ) {
+		$l     = function_exists( 'promedix_current_landing' ) ? promedix_current_landing() : null;
+		$image = 'scene:' . ( $l ? $l['scene'] : 'team' );
+		if ( $l && ! $atts['lead'] ) {
+			$atts['lead'] = $l['lead'];
+		}
+	}
 	$scene = '';
 	if ( 0 === strpos( $image, 'scene:' ) ) {
 		$k     = sanitize_key( substr( $image, 6 ) );

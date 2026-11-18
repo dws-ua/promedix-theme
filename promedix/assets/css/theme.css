@@ -974,3 +974,10 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 /* Sold-out sizes: soft, with a thin diagonal stroke */
 .pmx-tile-btn:disabled, .pmx-tile-btn.is-soldout { position: relative; overflow: hidden; background: #fff; border-color: var(--border); color: #A9B6BE; text-decoration: none; }
 .pmx-tile-btn:disabled::after, .pmx-tile-btn.is-soldout::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent calc(50% - .75px), #C9D3D9 calc(50% - .75px), #C9D3D9 calc(50% + .75px), transparent calc(50% + .75px)); pointer-events: none; }
+/* SEO landing pages */
+.pmx-landing-text { padding-top: 16px; padding-bottom: 24px; }
+.pmx-landing-links { padding-bottom: var(--section); }
+.pmx-landing-links ul { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.pmx-landing-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--heading); font-weight: 600; text-decoration: none; transition: border-color var(--t) ease, color var(--t) ease; }
+.pmx-landing-links a:hover { border-color: var(--primary); color: var(--primary); }
+.pmx-seo-wrap + .pmx-landing-links { margin-top: calc(-1 * var(--section) + 8px); }

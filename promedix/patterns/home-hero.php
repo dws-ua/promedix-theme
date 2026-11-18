@@ -74,8 +74,24 @@ $slide = function ( $args ) {
 <div class="wp-block-group pmx-hero pmx-slider"><!-- wp:group {"align":"wide","className":"pmx-slider__track","layout":{"type":"default"}} -->
 <div class="wp-block-group alignwide pmx-slider__track"><?php
 echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
-	'mod'     => 'care',
+	'mod'     => 'team',
 	'h1'      => true,
+	'tag'     => __( 'Для клінік і салонів', 'promedix' ),
+	'title'   => __( 'Одна команда. <span class="pmx-hl">Один стандарт</span> комфорту.', 'promedix' ),
+	'lead'    => __( 'Підберемо моделі й розміри для кожного працівника. Оптові ціни надамо за запитом.', 'promedix' ),
+	'btn'     => __( 'Отримати пропозицію', 'promedix' ),
+	'url'     => promedix_link( 'teams' ) ? promedix_link( 'teams' ) : $shop,
+	'btn2'    => __( 'Каталог', 'promedix' ),
+	'url2'    => $shop,
+	'num'     => 'B2B',
+	'imgs'    => array(),
+	'card'    => 'card-team.webp',
+	'alt'     => __( 'Сабо ProMedix для всієї команди', 'promedix' ),
+	'caption' => __( 'Для клінік і салонів', 'promedix' ),
+) );
+echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
+	'mod'     => 'care',
+	'h1'      => false,
 	'tag'     => __( 'Професійне взуття', 'promedix' ),
 	'title'   => __( 'Ви дбаєте про інших. Подбайте <span class="pmx-hl">про себе.</span>', 'promedix' ),
 	'lead'    => __( 'Анатомічні сабо з натуральної шкіри для довгих змін. Виготовлено в Італії.', 'promedix' ),
@@ -101,22 +117,6 @@ echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
 	'imgs'    => array( '2026/03/zhinochi-sabo-promedix-714-piony-1024x1024.jpg', '2026/03/zhinochi-sabo-promedix-154-tiulpan-1024x1024.jpg' ),
 	'alt'     => __( 'Сабо ProMedix 714 Піони', 'promedix' ),
 	'caption' => 'ProMedix 714 Піони',
-) );
-echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
-	'mod'     => 'team',
-	'h1'      => false,
-	'tag'     => __( 'Для клінік і салонів', 'promedix' ),
-	'title'   => __( 'Одна команда. <span class="pmx-hl">Один стандарт</span> комфорту.', 'promedix' ),
-	'lead'    => __( 'Підберемо моделі й розміри для кожного працівника. Оптові ціни надамо за запитом.', 'promedix' ),
-	'btn'     => __( 'Отримати пропозицію', 'promedix' ),
-	'url'     => promedix_link( 'teams' ) ? promedix_link( 'teams' ) : $shop,
-	'btn2'    => __( 'Каталог', 'promedix' ),
-	'url2'    => $shop,
-	'num'     => 'B2B',
-	'imgs'    => array(),
-	'card'    => 'card-team.webp',
-	'alt'     => __( 'Сабо ProMedix для всієї команди', 'promedix' ),
-	'caption' => __( 'Для клінік і салонів', 'promedix' ),
 ) );
 echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
 	'mod'     => 'men',

@@ -417,6 +417,13 @@
       "postTypes": [
         "page"
       ]
+    },
+    {
+      "name": "page-landing",
+      "title": "SEO-сторінка професії",
+      "postTypes": [
+        "page"
+      ]
     }
   ]
 }
