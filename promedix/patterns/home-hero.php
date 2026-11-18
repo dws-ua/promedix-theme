@@ -53,7 +53,7 @@ $slide = function ( $args ) {
 <!-- /wp:image --><?php endforeach; ?><?php if ( ! empty( $args['card'] ) ) : ?>
 
 <!-- wp:image {"className":"pmx-slide__card"} -->
-<figure class="wp-block-image pmx-slide__card"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/img/scenes/' . $args['card'] ) ); ?>" alt=""<?php echo $args['h1'] ? ' fetchpriority="high"' : ' loading="lazy"'; ?>/></figure>
+<figure class="wp-block-image pmx-slide__card"><img src="<?php echo esc_url( add_query_arg( 'v', PROMEDIX_VERSION, get_theme_file_uri( 'assets/img/scenes/' . $args['card'] ) ) ); ?>" alt=""<?php echo $args['h1'] ? ' fetchpriority="high"' : ' loading="lazy"'; ?>/></figure>
 <!-- /wp:image --><?php endif; ?><?php if ( ! empty( $args['person'] ) ) : ?>
 
 <!-- wp:image {"className":"pmx-slide__person"} -->
