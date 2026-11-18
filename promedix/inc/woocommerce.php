@@ -367,7 +367,7 @@ function promedix_swatches( $product_id, $max = 3 ) {
 		$out .= '<a class="' . $cls . '" href="' . esc_url( get_permalink( $id ) ) . '" title="' . esc_attr( promedix_short_title( get_the_title( $id ) ) ) . '"' . ( $img ? ' style="background-image:url(' . esc_url( $img ) . ')"' : '' ) . '><span class="pmx-visually-hidden">' . esc_html( get_the_title( $id ) ) . '</span></a>';
 	}
 	if ( $more > 0 ) {
-		$out .= '<span class="pmx-swatch-more">+' . (int) $more . '</span>';
+		$out .= '<a class="pmx-swatch-more" href="' . esc_url( get_permalink( $product_id ) ) . '#pmx-colors" title="' . esc_attr__( 'Усі кольори моделі', 'promedix' ) . '">+' . (int) $more . '</a>';
 	}
 	return $out . '</span>';
 }

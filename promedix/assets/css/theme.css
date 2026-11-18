@@ -531,7 +531,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .woocommerce div.product .woocommerce-product-details__short-description { color: var(--text); margin-bottom: 20px; }
 .pmx-model-colors { margin: 0 0 20px; }
 .pmx-model-colors .pmx-label { margin-bottom: 10px; }
-.pmx-model-colors .pmx-swatches { position: static; gap: 12px; }
+.pmx-model-colors .pmx-swatches { position: static; gap: 12px; flex-wrap: wrap; }
 .pmx-model-colors .pmx-swatch { width: 36px; height: 36px; }
 .woocommerce div.product form.cart { margin: 0 0 20px; }
 .woocommerce div.product form.cart .variations, .woocommerce div.product form.cart .variations tbody { display: block; width: 100%; margin: 0 0 4px; border: 0; }
@@ -968,3 +968,4 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-page-hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .pmx-page-hero__cta .pmx-btn--secondary { background: rgba(255,255,255,.8); }
 @media (max-width: 760px) { .pmx-page-hero__cta .pmx-btn { flex: 1 1 100%; } }
+.pmx-swatch-more { text-decoration: none; padding: 4px 2px; } .pmx-swatch-more:hover { color: var(--primary, #286071); }

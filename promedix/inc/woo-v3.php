@@ -325,7 +325,7 @@ add_filter( 'woocommerce_breadcrumb_defaults', function ( $d ) {
 
 /* Colour of the model: links to the sibling products (same model number). */
 add_action( 'woocommerce_single_product_summary', function () {
-	$sw = promedix_swatches( get_the_ID(), 6 );
+	$sw = promedix_swatches( get_the_ID(), 99 );
 	if ( ! $sw ) {
 		return;
 	}
@@ -334,7 +334,7 @@ add_action( 'woocommerce_single_product_summary', function () {
 	if ( $t ) {
 		$name = implode( ', ', $t );
 	}
-	echo '<div class="pmx-model-colors"><p class="pmx-label">' . esc_html__( 'Колір', 'promedix' ) . ( $name ? ': <span>' . esc_html( $name ) . '</span>' : '' ) . '</p>' . $sw . '</div>'; // phpcs:ignore
+	echo '<div class="pmx-model-colors" id="pmx-colors"><p class="pmx-label">' . esc_html__( 'Колір', 'promedix' ) . ( $name ? ': <span>' . esc_html( $name ) . '</span>' : '' ) . '</p>' . $sw . '</div>'; // phpcs:ignore
 }, 25 );
 
 /* "For teams" line under the buy button. */
