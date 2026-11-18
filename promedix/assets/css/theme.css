@@ -855,3 +855,20 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
   .woocommerce div.product > .pmx-tabs { grid-column: 1; grid-row: 2; margin-top: 16px; }
   .woocommerce div.product > .pmx-tabs .pmx-tabs__list { flex-wrap: wrap; }
 }
+
+/* Home hero fits the screen on laptops: slider controls and the profession strip stay visible above the fold. */
+@media (min-width: 961px) {
+  .pmx-slide__cols { min-height: min(clamp(460px, 40vw, 560px), calc(100svh - var(--header-h) - 150px)) !important; }
+  .pmx-slide__media { min-height: 0; padding: 16px 0; }
+  .pmx-slide__img, .pmx-slide--prints .pmx-slide__img--1 { max-width: min(600px, calc(100svh - var(--header-h) - 190px)); }
+  .pmx-slide__media { max-height: calc(100svh - var(--header-h) - 150px); }
+  .pmx-slide__text { padding: clamp(24px, 4svh, 56px) 0; }
+  .pmx-slide__title { font-size: min(clamp(2.5rem, 1.3rem + 3.6vw, 4rem), 7.2svh) !important; }
+}
+
+/* Product gallery: the thumbnail column never makes the gallery taller than the main photo (it scrolls instead). */
+@media (min-width: 961px) {
+  .woocommerce div.product div.images { padding-left: 104px; display: block; }
+  .woocommerce div.product div.images .flex-control-thumbs { position: absolute; left: 0; top: 0; bottom: 0; width: 92px; max-height: none; overflow-y: auto; overscroll-behavior: contain; }
+}
+.woocommerce div.product form.cart .reset_variations[style*="hidden"] { display: none !important; }
