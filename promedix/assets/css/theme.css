@@ -971,3 +971,6 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-swatch-more { text-decoration: none; padding: 4px 2px; } .pmx-swatch-more:hover { color: var(--primary, #286071); }
 .pmx-pick__all { margin-top: 32px; text-align: center; } .pmx-pick__all a.pmx-btn { display: inline-flex; color: var(--primary); }
 .wp-block-group.pmx-prose:empty { display: none; }
+/* Sold-out sizes: soft, with a thin diagonal stroke */
+.pmx-tile-btn:disabled, .pmx-tile-btn.is-soldout { position: relative; overflow: hidden; background: #fff; border-color: var(--border); color: #A9B6BE; text-decoration: none; }
+.pmx-tile-btn:disabled::after, .pmx-tile-btn.is-soldout::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top right, transparent calc(50% - .75px), #C9D3D9 calc(50% - .75px), #C9D3D9 calc(50% + .75px), transparent calc(50% + .75px)); pointer-events: none; }
