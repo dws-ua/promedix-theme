@@ -969,3 +969,4 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-page-hero__cta .pmx-btn--secondary { background: rgba(255,255,255,.8); }
 @media (max-width: 760px) { .pmx-page-hero__cta .pmx-btn { flex: 1 1 100%; } }
 .pmx-swatch-more { text-decoration: none; padding: 4px 2px; } .pmx-swatch-more:hover { color: var(--primary, #286071); }
+.pmx-pick__all { margin-top: 32px; text-align: center; } .pmx-pick__all a.pmx-btn { display: inline-flex; color: var(--primary); }
