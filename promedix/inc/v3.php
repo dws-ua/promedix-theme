@@ -160,11 +160,20 @@ add_shortcode( 'promedix_page_hero', function ( $atts ) {
 	if ( '1' === $atts['crumbs'] && ! is_front_page() ) {
 		$crumbs = '<nav class="pmx-crumbs" aria-label="' . esc_attr__( 'Хлібні крихти', 'promedix' ) . '"><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Головна', 'promedix' ) . '</a><span aria-hidden="true">/</span><span aria-current="page">' . esc_html( wp_strip_all_tags( promedix_current_title() ) ) . '</span></nav>';
 	}
-	$img = '';
-	if ( $atts['image'] ) {
-		$img = '<figure class="pmx-page-hero__img"><img src="' . esc_url( promedix_upload( $atts['image'] ) ) . '" alt="" width="520" height="520"></figure>';
+	$img    = '';
+	$person = false;
+	$image  = $atts['image'];
+	if ( 'profession' === $image ) {
+		$map   = array( 'dlia-medykiv' => 'doctor', 'dlia-perukariv' => 'barber', 'dlia-biuti-maistriv' => 'beauty' );
+		$slug  = get_post_field( 'post_name', get_queried_object_id() );
+		$image = 'theme:people/' . ( isset( $map[ $slug ] ) ? 'person-' . $map[ $slug ] : 'team' ) . '.webp';
 	}
-	return '<header class="pmx-page-hero' . ( $img ? ' has-image' : '' ) . ( $atts['size'] ? ' pmx-page-hero--' . sanitize_html_class( $atts['size'] ) : '' ) . '"><div class="pmx-container pmx-page-hero__in"><div class="pmx-page-hero__text">' . $crumbs
+	if ( $image ) {
+		$person = 0 === strpos( $image, 'theme:people/' );
+		$src    = 0 === strpos( $image, 'theme:' ) ? get_theme_file_uri( 'assets/img/' . substr( $image, 6 ) ) : promedix_upload( $image );
+		$img    = '<figure class="pmx-page-hero__img' . ( $person ? ' is-person' : '' ) . '"><img src="' . esc_url( $src ) . '" alt="" width="520" height="520" fetchpriority="high"></figure>';
+	}
+	return '<header class="pmx-page-hero' . ( $img ? ' has-image' : '' ) . ( $person ? ' has-person' : '' ) . ( $atts['size'] ? ' pmx-page-hero--' . sanitize_html_class( $atts['size'] ) : '' ) . '"><div class="pmx-container pmx-page-hero__in"><div class="pmx-page-hero__text">' . $crumbs
 		. '<h1 class="pmx-page-hero__title">' . $title . '</h1>'
 		. ( $atts['lead'] ? '<p class="pmx-page-hero__lead">' . esc_html( $atts['lead'] ) . '</p>' : '' )
 		. '</div>' . $img . '</div></header>';

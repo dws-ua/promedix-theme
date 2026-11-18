@@ -267,12 +267,19 @@ add_filter( 'shortcode_atts_promedix_page_hero', function ( $out ) {
 	return $out;
 } );
 add_action( 'woocommerce_after_shop_loop', function () {
+	if ( is_shop() && ! is_search() ) {
+		echo promedix_seo_block( 'shop' ); // phpcs:ignore WordPress.Security.EscapeOutput
+		return;
+	}
 	if ( ! is_product_taxonomy() ) {
 		return;
 	}
 	$d = term_description();
 	if ( $d && strlen( wp_strip_all_tags( $d ) ) > 200 ) {
-		echo '<details class="pmx-seo"><summary>' . esc_html__( 'Детальніше про категорію', 'promedix' ) . '</summary><div class="pmx-prose">' . wp_kses_post( $d ) . '</div></details>';
+		echo '<details class="pmx-seo"><summary>' . esc_html( single_term_title( '', false ) ) . '</summary><div class="pmx-prose">' . wp_kses_post( $d ) . '</div></details>';
+	} else {
+		$o = get_queried_object();
+		echo $o instanceof WP_Term ? promedix_seo_block( $o->slug ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 }, 30 );
 

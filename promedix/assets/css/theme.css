@@ -875,3 +875,54 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-slide__num { display: none !important; }
 /* Cards: product photos are square with wide empty margins; fill the 4:3 card by width (only empty top/bottom background is trimmed, toe and heel stay). */
 .woocommerce ul.products li.product a img, .pmx-favs img { object-fit: cover; object-position: center; }
+
+/* ---------- 3.1: ribbons and people from the approved artwork ---------- */
+.pmx-hl { background: url("../img/deco/stroke-yellow.webp") left 100% / 100% .3em no-repeat; padding-bottom: .1em; }
+.pmx-hero {
+  background:
+    url("../img/deco/ribbon-low.webp") right -4% bottom -6% / min(62vw, 900px) auto no-repeat,
+    url("../img/deco/ribbon-long.webp") right -6% top 8% / min(58vw, 860px) auto no-repeat,
+    linear-gradient(90deg, #F7FBFD 0%, #EEF5FA 40%, #E2EEF5 100%) !important;
+}
+.pmx-slide__media::before { content: ""; position: absolute; left: -6%; right: -8%; top: 6%; bottom: 0; background: url("../img/deco/ribbon-rise.webp") center 60% / contain no-repeat; z-index: 0; pointer-events: none; opacity: .95; }
+.pmx-page-hero::after { background: url("../img/deco/ribbon-long.webp") right -4% top 20% / min(62vw, 880px) auto no-repeat, url("../img/deco/ribbon-lines.webp") right 8% bottom -10% / min(46vw, 640px) auto no-repeat !important; }
+
+/* People cut-outs: no glow mask, they stand on the bottom edge of the band */
+.pmx-slide__person { position: absolute !important; right: 0; bottom: 0; top: 4%; margin: 0 !important; z-index: 2; display: flex; align-items: flex-end; pointer-events: none; }
+.pmx-slide__person img { height: 100%; width: auto; max-width: none; object-fit: contain; object-position: bottom; }
+.pmx-slide--care .pmx-slide__img { max-width: min(470px, calc(100svh - var(--header-h) - 230px)) !important; margin-right: 30% !important; }
+.pmx-slide--care .pmx-slide__caption { right: 34%; }
+.pmx-slide--team .pmx-slide__person { left: 0; right: 0; justify-content: center; top: 2%; }
+.pmx-slide--team .pmx-slide__caption { display: none; }
+.pmx-slide__media { overflow: visible; }
+.pmx-page-hero.has-person .pmx-page-hero__in { padding-bottom: 0 !important; }
+.pmx-page-hero.has-person .pmx-page-hero__in > .pmx-page-hero__text { padding-bottom: 40px; }
+.pmx-page-hero__img.is-person { align-self: end; margin: 0; width: auto; height: clamp(220px, 24vw, 330px); }
+.pmx-page-hero__img.is-person img { height: 100%; width: auto; aspect-ratio: auto; -webkit-mask-image: none; mask-image: none; object-fit: contain; object-position: bottom; }
+@media (max-width: 960px) {
+  .pmx-slide__person { position: relative !important; top: auto; height: 300px; justify-content: center; }
+  .pmx-slide--care .pmx-slide__person { display: none; }
+  .pmx-slide--care .pmx-slide__img { margin-right: 0 !important; }
+  .pmx-slide__media::before { top: 0; }
+}
+@media (max-width: 760px) {
+  .pmx-page-hero__img.is-person { display: flex; justify-self: center; height: 220px; margin-top: 8px; }
+}
+.pmx-slide--care .pmx-slide__caption { right: auto; left: 8%; bottom: 24px; }
+@media (max-width: 960px) {
+  .pmx-slide__person { height: auto; max-width: 100%; }
+  .pmx-slide__person img { width: 100%; height: auto; max-width: 100%; max-height: 300px; object-fit: contain; }
+  .pmx-slide__track, .pmx-slide, .pmx-slide__cols { min-width: 0; max-width: 100%; }
+  .pmx-page-hero::after { background-position: right -30% bottom -6%, right 0 bottom -20% !important; background-size: 120% auto, 90% auto !important; opacity: .7; }
+}
+/* SEO block */
+.pmx-seo-wrap { margin-bottom: var(--section); }
+.pmx-seo-wrap .pmx-seo { margin: 0 !important; }
+.pmx-seo summary { list-style: none; justify-content: space-between; gap: 16px; border-radius: var(--r-lg); }
+.pmx-seo summary::-webkit-details-marker { display: none; }
+.pmx-seo summary::after { content: ""; flex: none; width: 10px; height: 10px; border-right: 2px solid var(--primary); border-bottom: 2px solid var(--primary); transform: rotate(45deg) translateY(-3px); transition: transform var(--t) ease; }
+.pmx-seo[open] summary::after { transform: rotate(-135deg) translateY(-3px); }
+.pmx-seo summary:focus { outline: none; }
+.pmx-seo summary:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+.pmx-seo .pmx-prose { padding-bottom: 24px; }
+.pmx-seo h3 { font-size: 1.25rem; margin: 24px 0 8px; }

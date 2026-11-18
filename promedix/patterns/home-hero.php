@@ -50,7 +50,11 @@ $slide = function ( $args ) {
 
 <!-- wp:image {"sizeSlug":"large","className":"pmx-slide__img pmx-slide__img--<?php echo (int) $i + 1; ?>"} -->
 <figure class="wp-block-image size-large pmx-slide__img pmx-slide__img--<?php echo (int) $i + 1; ?>"><img src="<?php echo esc_url( promedix_upload( $img ) ); ?>" alt="<?php echo esc_attr( 0 === $i ? $args['alt'] : '' ); ?>"<?php echo $args['h1'] && 0 === $i ? ' fetchpriority="high"' : ' loading="lazy"'; ?>/></figure>
-<!-- /wp:image --><?php endforeach; ?>
+<!-- /wp:image --><?php endforeach; ?><?php if ( ! empty( $args['person'] ) ) : ?>
+
+<!-- wp:image {"className":"pmx-slide__person"} -->
+<figure class="wp-block-image pmx-slide__person"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/img/people/' . $args['person'] ) ); ?>" alt=""<?php echo $args['h1'] ? ' fetchpriority="high"' : ' loading="lazy"'; ?>/></figure>
+<!-- /wp:image --><?php endif; ?>
 
 <!-- wp:paragraph {"className":"pmx-slide__caption"} -->
 <p class="pmx-slide__caption"><?php echo esc_html( $args['caption'] ); ?></p>
@@ -77,6 +81,7 @@ echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
 	'url2'    => '#pmx-picker',
 	'num'     => '707',
 	'imgs'    => array( '2025/01/1-5-1024x1024.png' ),
+	'person'  => 'person-nurse.webp',
 	'alt'     => __( 'Білі медичні сабо ProMedix 707', 'promedix' ),
 	'caption' => 'ProMedix 707',
 ) );
@@ -100,11 +105,12 @@ echo $slide( array( // phpcs:ignore WordPress.Security.EscapeOutput
 	'title'   => __( 'Одна команда. <span class="pmx-hl">Один стандарт</span> комфорту.', 'promedix' ),
 	'lead'    => __( 'Підберемо моделі й розміри для кожного працівника. Оптові ціни надамо за запитом.', 'promedix' ),
 	'btn'     => __( 'Отримати пропозицію', 'promedix' ),
-	'url'     => '#wholesale',
+	'url'     => promedix_link( 'teams' ) ? promedix_link( 'teams' ) : $shop,
 	'btn2'    => __( 'Каталог', 'promedix' ),
 	'url2'    => $shop,
 	'num'     => 'B2B',
-	'imgs'    => array( '2026/03/zhinochi-sabo-promedix-707-syni-1024x1024.jpg', '2026/03/zhinochi-sabo-promedix-707-rozhevi-1024x1024.jpg', '2025/01/1-5-1024x1024.png' ),
+	'imgs'    => array(),
+	'person'  => 'team.webp',
 	'alt'     => __( 'Сабо ProMedix для всієї команди', 'promedix' ),
 	'caption' => __( 'Для клінік і салонів', 'promedix' ),
 ) );
