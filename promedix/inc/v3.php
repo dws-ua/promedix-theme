@@ -592,12 +592,13 @@ add_shortcode( 'promedix_profession', function ( $atts ) {
 		$tabs .= '<a href="' . esc_url( $it['url'] ) . '"' . ( $k === $key ? ' aria-current="page" class="is-on"' : '' ) . '>' . esc_html( $it['label'] ) . '</a>';
 	}
 	$tabs .= '</nav>';
-	$products = $p['cat'] ? '[products limit="8" columns="4" category="' . esc_attr( $p['cat'] ) . '" orderby="popularity" visibility="visible"]' : '[products limit="8" columns="4" orderby="popularity" visibility="visible"]';
+	$products = '[products limit="8" columns="4" category="' . esc_attr( promedix_sabo_cats() ) . '" orderby="popularity" visibility="visible"]';
 	$shop_url = wc_get_page_permalink( 'shop' );
 	$all_link = '<p class="pmx-more pmx-pick__all"><a class="pmx-btn pmx-btn--secondary" href="' . esc_url( $shop_url ) . '">' . esc_html__( 'Переглянути весь каталог', 'promedix' ) . '</a></p>';
 	$c        = promedix_contacts();
 	return '<div class="pmx-container pmx-prof-page">' . $tabs
 		. '<section class="pmx-block" id="pmx-pick"><h2>' . esc_html__( 'Оберіть свою пару', 'promedix' ) . '</h2>' . do_shortcode( $products ) . $all_link . '</section>'
+		. ( 'beauty' === $key ? promedix_kroksy_block() : '' )
 		. '<section class="pmx-block pmx-sizehelp"><div><h2>' . esc_html__( 'Потрібна допомога з розміром?', 'promedix' ) . '</h2><p>' . esc_html__( 'Підкажемо, як обрати розмір, щоб було комфортно весь робочий день.', 'promedix' ) . '</p>'
 		. '<a class="pmx-btn pmx-btn--secondary" href="tel:' . esc_attr( $c['phone_retail_href'] ) . '">' . promedix_ui_icon( 'phone', 20 ) . esc_html( $c['phone_retail'] ) . '</a></div></section></div>';
 } );

@@ -56,7 +56,7 @@ function promedix_landings() {
 			'h1'    => 'Взуття для лікарів',
 			'lead'  => 'Шкіряні сабо для лікарок і лікарів: комфорт від прийому до операційної.',
 			'scene' => 'team',
-			'cat'   => 'medychne-vzuttia',
+			'cat'   => '',
 			'title' => 'Взуття для лікарів — медичні сабо з натуральної шкіри | ProMedix',
 			'desc'  => 'Медичне взуття для лікарів: жіночі та чоловічі шкіряні сабо з анатомічною устілкою і протиударною підошвою. Виробник Італія, доставка по Україні, опт для клінік.',
 			'kw'    => 'взуття для лікарів',
@@ -71,7 +71,7 @@ function promedix_landings() {
 			'h1'    => 'Взуття для стоматологів',
 			'lead'  => 'Сабо для стоматологів і асистентів, які працюють біля крісла цілий день.',
 			'scene' => 'nurse',
-			'cat'   => 'medychne-vzuttia',
+			'cat'   => '',
 			'title' => 'Взуття для стоматологів і асистентів — шкіряні сабо | ProMedix',
 			'desc'  => 'Сабо для стоматологів, асистентів і гігієністів: натуральна шкіра, анатомічна устілка, протиударна підошва. Білі й кольорові моделі, доставка по Україні, опт для клінік.',
 			'kw'    => 'взуття для стоматологів',
@@ -86,7 +86,7 @@ function promedix_landings() {
 			'h1'    => 'Взуття для фармацевтів',
 			'lead'  => 'Зручні сабо для провізорів і працівників аптек.',
 			'scene' => 'team',
-			'cat'   => 'medychne-vzuttia',
+			'cat'   => '',
 			'title' => 'Взуття для фармацевтів і аптек — шкіряні сабо | ProMedix',
 			'desc'  => 'Сабо для фармацевтів і провізорів: натуральна шкіра, анатомічна устілка, протиударна підошва, Італія. Доставка по Україні, опт для аптечних мереж за запитом.',
 			'kw'    => 'взуття для фармацевтів',
@@ -101,7 +101,7 @@ function promedix_landings() {
 			'h1'    => 'Взуття для лаборантів',
 			'lead'  => 'Сабо для працівників лабораторій і пунктів забору крові.',
 			'scene' => 'team',
-			'cat'   => 'medychne-vzuttia',
+			'cat'   => '',
 			'title' => 'Взуття для лаборантів і лабораторій — шкіряні сабо | ProMedix',
 			'desc'  => 'Робочі сабо для лаборантів і медичних лабораторій: натуральна шкіра, анатомічна устілка, протиударна підошва. Доставка по Україні, ціна для лабораторій за запитом.',
 			'kw'    => 'взуття для лаборантів',
@@ -116,7 +116,7 @@ function promedix_landings() {
 			'h1'    => 'Взуття для ветеринарів',
 			'lead'  => 'Шкіряні сабо для ветеринарних лікарів і асистентів клінік.',
 			'scene' => 'team',
-			'cat'   => 'medychne-vzuttia',
+			'cat'   => '',
 			'title' => 'Взуття для ветеринарів — шкіряні медичні сабо | ProMedix',
 			'desc'  => 'Медичні сабо для ветеринарних лікарів і асистентів: натуральна шкіра, анатомічна устілка, протиударна підошва. Доставка по Україні, опт для ветклінік за запитом.',
 			'kw'    => 'взуття для ветеринарів',
@@ -128,6 +128,7 @@ function promedix_landings() {
 				. $buy,
 		),
 		'vzuttia-dlia-kosmetolohiv' => array(
+			'kroksy' => true,
 			'h1'    => 'Взуття для косметологів',
 			'lead'  => 'Зручні сабо для косметологів, які працюють у кабінеті цілий день.',
 			'scene' => 'beauty',
@@ -143,6 +144,7 @@ function promedix_landings() {
 				. $buy,
 		),
 		'vzuttia-dlia-maistriv-manikiuru' => array(
+			'kroksy' => true,
 			'h1'    => 'Взуття для майстрів манікюру',
 			'lead'  => 'Сабо і крокси для nail-майстрів і подологів.',
 			'scene' => 'beauty',
@@ -158,6 +160,7 @@ function promedix_landings() {
 				. $buy,
 		),
 		'vzuttia-dlia-masazhystiv' => array(
+			'kroksy' => true,
 			'h1'    => 'Взуття для масажистів',
 			'lead'  => 'Сабо для масажистів і реабілітологів, які працюють на ногах.',
 			'scene' => 'beauty',
@@ -192,7 +195,7 @@ function promedix_landings() {
 			'h1'    => 'Медичні сабо оптом',
 			'lead'  => 'Шкіряні сабо для клінік, аптек, лабораторій і салонів. Ціна для команди за запитом.',
 			'scene' => 'team',
-			'cat'   => 'medychne-vzuttia',
+			'cat'   => '',
 			'title' => 'Медичні сабо оптом — для клінік, аптек і салонів | ProMedix',
 			'desc'  => 'Медичні сабо ProMedix оптом: шкіряні моделі з Італії для клінік, аптек, лабораторій і салонів. Підбір розмірів для команди, ціна за запитом: +38 066 008 79 47.',
 			'kw'    => 'медичні сабо оптом',
@@ -229,14 +232,31 @@ add_shortcode( 'promedix_landing', function () {
 	} elseif ( $l['cat'] ) {
 		$sc = '[products limit="8" columns="4" category="' . esc_attr( $l['cat'] ) . '" orderby="popularity" visibility="visible"]';
 	} else {
-		$sc = '[products limit="8" columns="4" orderby="popularity" visibility="visible"]';
+		$sc = '[products limit="8" columns="4" category="' . esc_attr( promedix_sabo_cats() ) . '" orderby="popularity" visibility="visible"]';
 	}
 	$h  = '<div class="pmx-container pmx-landing">';
 	$h .= '<section class="pmx-block" id="pmx-pick"><h2>' . esc_html__( 'Оберіть свою пару', 'promedix' ) . '</h2>' . do_shortcode( $sc )
 		. '<p class="pmx-more pmx-pick__all"><a class="pmx-btn pmx-btn--secondary" href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">' . esc_html__( 'Переглянути весь каталог', 'promedix' ) . '</a></p></section>';
+	if ( ! empty( $l['kroksy'] ) ) {
+		$h .= promedix_kroksy_block();
+	}
 	$h .= '</div>';
 	return $h;
 } );
+
+/** Leather clogs only (crocs are a different, non-leather product and get their own block). */
+function promedix_sabo_cats() {
+	return 'zhinochi-sabo,cholovichi-sabo';
+}
+
+function promedix_kroksy_block() {
+	$url = promedix_term_url( 'kroksy-anatomichni' );
+	return '<section class="pmx-block pmx-kroksy" aria-labelledby="pmx-kr-t"><h2 id="pmx-kr-t">' . esc_html__( 'Анатомічні крокси', 'promedix' ) . '</h2>'
+		. '<p class="pmx-kroksy__lead">' . esc_html__( 'Окрема легка модель на платформі. Не шкіряні, легко миються і швидко висихають.', 'promedix' ) . '</p>'
+		. do_shortcode( '[products limit="4" columns="4" category="kroksy-anatomichni" visibility="visible"]' )
+		. ( $url ? '<p class="pmx-more"><a href="' . esc_url( $url ) . '">' . esc_html__( 'Усі крокси', 'promedix' ) . '</a></p>' : '' )
+		. '</section>';
+}
 
 /* Links to all profession pages (landings + the three main ones): [promedix_landing_links] */
 add_shortcode( 'promedix_landing_links', function () {

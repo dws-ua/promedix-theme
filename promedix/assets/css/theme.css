@@ -981,3 +981,6 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-landing-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1px solid var(--border); border-radius: 999px; background: #fff; color: var(--heading); font-weight: 600; text-decoration: none; transition: border-color var(--t) ease, color var(--t) ease; }
 .pmx-landing-links a:hover { border-color: var(--primary); color: var(--primary); }
 .pmx-seo-wrap + .pmx-landing-links { margin-top: calc(-1 * var(--section) + 8px); }
+.pmx-kroksy { margin-top: 56px; padding-top: 48px; border-top: 1px solid var(--border); }
+.pmx-kroksy__lead { margin: -8px 0 24px; color: var(--text-muted); }
+.pmx-kroksy .pmx-more { margin-top: 16px; }

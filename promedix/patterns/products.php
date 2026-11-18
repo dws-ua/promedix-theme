@@ -18,6 +18,6 @@ $shop = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'sho
 <!-- /wp:group -->
 
 <!-- wp:shortcode -->
-[products limit="4" columns="4" orderby="popularity" visibility="visible"]
+[products limit="4" columns="4" category="zhinochi-sabo,cholovichi-sabo" orderby="popularity" visibility="visible"]
 <!-- /wp:shortcode --></div>
 <!-- /wp:group -->
