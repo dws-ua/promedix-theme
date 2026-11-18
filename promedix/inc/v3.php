@@ -386,7 +386,9 @@ function promedix_page_content( $key ) {
 		return '';
 	}
 	$page = get_post( promedix_wpml_id( $page->ID, 'page' ) );
-	return apply_filters( 'the_content', $page->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+	$html = apply_filters( 'the_content', $page->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+	// The page hero already holds the only H1: demote headings inside the old page text.
+	return preg_replace( array( '#<h1(\s|>)#i', '#</h1>#i' ), array( '<h2$1', '</h2>' ), $html );
 }
 
 add_shortcode( 'promedix_help', function () {
