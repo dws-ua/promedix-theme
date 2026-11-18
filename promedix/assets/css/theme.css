@@ -211,8 +211,8 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 @media (max-width: 781px) { .pmx-header .pmx-logo { width: 120px !important; } .pmx-logo-link { padding: 10px 0; } }
 
 /* ---------- 7. Page hero band + breadcrumbs ---------- */
-.pmx-page-hero { position: relative; overflow: hidden; background: linear-gradient(90deg, #F7FBFD 0%, var(--bg-accent) 55%, #DCEBF3 100%); }
-.pmx-page-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 300' preserveAspectRatio='none'%3E%3Cpath d='M560 300C760 250 900 150 1080 110C1220 80 1340 90 1440 70V300Z' fill='%23CFE2EC' fill-opacity='.6'/%3E%3Cpath d='M480 300C720 240 880 130 1060 95C1200 68 1330 72 1440 52V64C1330 86 1210 86 1080 116C900 158 760 262 600 300Z' fill='%23fff' fill-opacity='.8'/%3E%3C/svg%3E") right bottom / 100% 100% no-repeat; }
+.pmx-page-hero { position: relative; overflow: hidden; background: linear-gradient(90deg, #F7FBFD 0%, #EEF5F9 50%, #E2EEF5 100%); }
+.pmx-page-hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url("../img/wave-page.svg") right center / cover no-repeat; }
 .pmx-page-hero__in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; min-height: 220px; padding-top: 32px !important; padding-bottom: 40px !important; }
 .pmx-page-hero--compact .pmx-page-hero__in { min-height: 160px; }
 .pmx-page-hero__title { margin: 0; max-width: 16em; }
@@ -234,8 +234,8 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-hero {
   position: relative; overflow: hidden; padding-top: 0 !important; padding-bottom: 0 !important;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 600' preserveAspectRatio='none'%3E%3Cpath d='M360 600C600 520 800 360 990 270C1150 195 1300 170 1440 165V600Z' fill='%23B7D2E8' fill-opacity='.55'/%3E%3Cpath d='M250 600C520 540 740 400 930 300C1090 220 1280 190 1440 186V214C1280 222 1110 255 960 330C790 420 600 545 440 600Z' fill='%23fff' fill-opacity='.65'/%3E%3C/svg%3E") right bottom / 100% 100% no-repeat,
-    linear-gradient(90deg, #F6FAFD 0%, #E6F0F9 42%, var(--pmx-sky) 70%);
+    url("../img/wave-hero.svg") right center / cover no-repeat,
+    linear-gradient(90deg, #F7FBFD 0%, #EEF5FA 40%, #E2EEF5 100%);
 }
 .pmx-slider__track { display: grid; max-width: calc(var(--container) + var(--gutter) * 2); padding: 0 var(--gutter) !important; margin: 0 auto !important; position: relative; z-index: 1; }
 .pmx-slide { grid-area: 1 / 1; margin: 0 !important; opacity: 1; }
@@ -872,3 +872,6 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
   .woocommerce div.product div.images .flex-control-thumbs { position: absolute; left: 0; top: 0; bottom: 0; width: 92px; max-height: none; overflow-y: auto; overscroll-behavior: contain; }
 }
 .woocommerce div.product form.cart .reset_variations[style*="hidden"] { display: none !important; }
+.pmx-slide__num { display: none !important; }
+/* Cards: product photos are square with wide empty margins; fill the 4:3 card by width (only empty top/bottom background is trimmed, toe and heel stay). */
+.woocommerce ul.products li.product a img, .pmx-favs img { object-fit: cover; object-position: center; }
