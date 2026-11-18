@@ -1,9 +1,17 @@
 <!-- wp:template-part {"slug":"header","area":"header","tagName":"div"} /-->
 
-<!-- wp:group {"tagName":"main","className":"pmx-main","layout":{"type":"default"}} -->
-<main class="wp-block-group pmx-main"><!-- wp:pattern {"slug":"promedix/b2b-page"} /-->
+<!-- wp:group {"tagName":"main","anchor":"pmx-content","className":"pmx-main pmx-page pmx-teams-page","layout":{"type":"default"}} -->
+<main id="pmx-content" class="wp-block-group pmx-main pmx-page pmx-teams-page"><!-- wp:shortcode -->
+[promedix_page_hero title="Комфорт для всієї команди." lead="Підберемо професійне взуття для вашої команди. Оптові ціни надаємо за запитом." image="2026/03/zhinochi-sabo-promedix-707-syni-1024x1024.jpg"]
+<!-- /wp:shortcode -->
 
-<!-- wp:post-content {"layout":{"type":"constrained"}} /--></main>
+<!-- wp:shortcode -->
+[promedix_teams]
+<!-- /wp:shortcode -->
+
+<!-- wp:group {"className":"pmx-container pmx-prose","layout":{"type":"default"}} -->
+<div class="wp-block-group pmx-container pmx-prose"><!-- wp:post-content {"layout":{"type":"default"}} /--></div>
+<!-- /wp:group --></main>
 <!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"footer","area":"footer","tagName":"div"} /-->

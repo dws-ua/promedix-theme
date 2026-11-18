@@ -5,8 +5,8 @@
     "appearanceTools": true,
     "useRootPaddingAwareAlignments": true,
     "layout": {
-      "contentSize": "1180px",
-      "wideSize": "1180px"
+      "contentSize": "1280px",
+      "wideSize": "1280px"
     },
     "color": {
       "defaultPalette": false,
@@ -15,38 +15,43 @@
       "palette": [
         {
           "slug": "ink",
-          "name": "Графіт (текст)",
-          "color": "#1E2B31"
+          "name": "Заголовки",
+          "color": "#142D38"
+        },
+        {
+          "slug": "body",
+          "name": "Основний текст",
+          "color": "#263F4A"
+        },
+        {
+          "slug": "muted",
+          "name": "Приглушений текст",
+          "color": "#506570"
         },
         {
           "slug": "primary",
-          "name": "Глибокий бірюзовий",
-          "color": "#2C5A6A"
-        },
-        {
-          "slug": "steel",
-          "name": "Бірюзовий",
-          "color": "#3E6F80"
+          "name": "Основний (кнопки)",
+          "color": "#286071"
         },
         {
           "slug": "primary-dark",
-          "name": "Бірюзовий темний",
-          "color": "#214756"
+          "name": "Наведення",
+          "color": "#204D5B"
         },
         {
-          "slug": "mint",
-          "name": "Небесний (банери)",
-          "color": "#E7F0F8"
+          "slug": "primary-active",
+          "name": "Натиснення",
+          "color": "#183D49"
         },
         {
-          "slug": "beige",
-          "name": "Блакитний (тло фото)",
-          "color": "#D0E5F8"
+          "slug": "steel",
+          "name": "Монохромний бренд",
+          "color": "#5E8395"
         },
         {
-          "slug": "mint-deep",
-          "name": "Світло-блакитний",
-          "color": "#EEF4F9"
+          "slug": "dark-section",
+          "name": "Темна секція",
+          "color": "#204D5B"
         },
         {
           "slug": "surface",
@@ -54,39 +59,69 @@
           "color": "#FFFFFF"
         },
         {
+          "slug": "subtle",
+          "name": "Тло світле",
+          "color": "#F5F9FB"
+        },
+        {
+          "slug": "mint",
+          "name": "Тло акцентне",
+          "color": "#EAF3F7"
+        },
+        {
+          "slug": "beige",
+          "name": "Тло фото товару",
+          "color": "#E1EDF3"
+        },
+        {
           "slug": "line",
           "name": "Лінія",
-          "color": "#E2EAF0"
+          "color": "#D6E3E9"
         },
         {
           "slug": "line-strong",
-          "name": "Лінія полів",
-          "color": "#C9D7E2"
-        },
-        {
-          "slug": "muted",
-          "name": "Приглушений текст",
-          "color": "#65737A"
-        },
-        {
-          "slug": "body",
-          "name": "Основний текст",
-          "color": "#3D4A51"
+          "name": "Рамка полів",
+          "color": "#748B96"
         },
         {
           "slug": "accent",
           "name": "Жовтий акцент",
-          "color": "#F2C230"
+          "color": "#F4D85E"
         },
         {
-          "slug": "on-dark",
-          "name": "Текст на темному",
-          "color": "#E7F0F8"
+          "slug": "success",
+          "name": "Успіх",
+          "color": "#237553"
+        },
+        {
+          "slug": "error",
+          "name": "Помилка",
+          "color": "#B42332"
+        },
+        {
+          "slug": "brand-blue",
+          "name": "Бренд синій",
+          "color": "#1D9CD7"
+        },
+        {
+          "slug": "brand-red",
+          "name": "Бренд червоний",
+          "color": "#E32124"
         },
         {
           "slug": "white",
           "name": "Білий",
           "color": "#FFFFFF"
+        },
+        {
+          "slug": "on-dark",
+          "name": "Текст на темному",
+          "color": "#FFFFFF"
+        },
+        {
+          "slug": "mint-deep",
+          "name": "Тло акцентне (дубль)",
+          "color": "#EAF3F7"
         }
       ]
     },
@@ -96,66 +131,63 @@
       "fontFamilies": [
         {
           "slug": "heading",
-          "name": "Montserrat",
-          "fontFamily": "Montserrat, 'Helvetica Neue', Arial, sans-serif"
+          "name": "Manrope",
+          "fontFamily": "Manrope, system-ui, sans-serif"
         },
         {
           "slug": "body",
-          "name": "Inter",
-          "fontFamily": "Inter, system-ui, -apple-system, sans-serif"
+          "name": "Manrope",
+          "fontFamily": "Manrope, system-ui, sans-serif"
         }
       ],
       "fontSizes": [
         {
           "slug": "xs",
           "name": "XS",
-          "size": "13px",
+          "size": "0.875rem",
           "fluid": false
         },
         {
           "slug": "sm",
           "name": "S",
-          "size": "15px",
+          "size": "0.9375rem",
           "fluid": false
         },
         {
           "slug": "md",
           "name": "M",
-          "size": "16px",
+          "size": "1rem",
           "fluid": false
         },
         {
           "slug": "lg",
           "name": "L",
-          "size": "18px",
+          "size": "1.25rem",
           "fluid": false
         },
         {
           "slug": "xl",
-          "name": "XL",
-          "size": "24px",
-          "fluid": {
-            "min": "20px",
-            "max": "24px"
-          }
+          "name": "H3",
+          "size": "1.5rem",
+          "fluid": false
         },
         {
           "slug": "2xl",
-          "name": "2XL",
-          "size": "34px",
-          "fluid": {
-            "min": "28px",
-            "max": "34px"
-          }
+          "name": "H2",
+          "size": "clamp(1.75rem, 1.2rem + 1.6vw, 2.25rem)",
+          "fluid": false
         },
         {
           "slug": "3xl",
-          "name": "3XL",
-          "size": "48px",
-          "fluid": {
-            "min": "34px",
-            "max": "48px"
-          }
+          "name": "H1",
+          "size": "clamp(2.25rem, 1.4rem + 2.6vw, 3rem)",
+          "fluid": false
+        },
+        {
+          "slug": "hero",
+          "name": "Hero",
+          "size": "clamp(2.5rem, 1.3rem + 3.6vw, 4rem)",
+          "fluid": false
         }
       ]
     },
@@ -170,33 +202,33 @@
       "spacingSizes": [
         {
           "slug": "20",
-          "name": "2XS",
+          "name": "8",
           "size": "8px"
         },
         {
           "slug": "30",
-          "name": "XS",
+          "name": "12",
           "size": "12px"
         },
         {
           "slug": "40",
-          "name": "S",
+          "name": "16",
           "size": "16px"
         },
         {
           "slug": "50",
-          "name": "M",
+          "name": "24",
           "size": "24px"
         },
         {
           "slug": "60",
-          "name": "L",
+          "name": "40",
           "size": "40px"
         },
         {
           "slug": "70",
-          "name": "XL",
-          "size": "clamp(48px, 6vw, 72px)"
+          "name": "80",
+          "size": "clamp(48px, 6vw, 80px)"
         }
       ]
     },
@@ -215,73 +247,82 @@
   "styles": {
     "color": {
       "background": "var(--wp--preset--color--surface)",
-      "text": "var(--wp--preset--color--ink)"
+      "text": "var(--wp--preset--color--body)"
     },
     "typography": {
       "fontFamily": "var(--wp--preset--font-family--body)",
       "fontSize": "var(--wp--preset--font-size--md)",
-      "lineHeight": "1.55"
+      "lineHeight": "1.625"
     },
     "spacing": {
       "padding": {
-        "left": "24px",
-        "right": "24px"
+        "left": "clamp(16px, 3vw, 32px)",
+        "right": "clamp(16px, 3vw, 32px)"
       },
       "blockGap": "24px"
     },
     "elements": {
       "link": {
         "color": {
-          "text": "var(--wp--preset--color--steel)"
+          "text": "var(--wp--preset--color--primary)"
         },
         ":hover": {
           "color": {
-            "text": "var(--wp--preset--color--primary)"
+            "text": "var(--wp--preset--color--primary-dark)"
           }
         }
       },
       "heading": {
+        "color": {
+          "text": "var(--wp--preset--color--ink)"
+        },
         "typography": {
           "fontFamily": "var(--wp--preset--font-family--heading)",
           "fontWeight": "700",
-          "lineHeight": "1.12",
+          "lineHeight": "1.2",
           "letterSpacing": "-0.01em"
         }
       },
       "h1": {
         "typography": {
-          "fontSize": "var(--wp--preset--font-size--3xl)"
+          "fontSize": "var(--wp--preset--font-size--3xl)",
+          "fontWeight": "800",
+          "lineHeight": "1.17",
+          "letterSpacing": "-0.03em"
         }
       },
       "h2": {
         "typography": {
-          "fontSize": "var(--wp--preset--font-size--2xl)"
+          "fontSize": "var(--wp--preset--font-size--2xl)",
+          "lineHeight": "1.22",
+          "letterSpacing": "-0.02em"
         }
       },
       "h3": {
         "typography": {
           "fontSize": "var(--wp--preset--font-size--xl)",
-          "fontWeight": "600"
+          "lineHeight": "1.33"
         }
       },
       "button": {
         "color": {
           "background": "var(--wp--preset--color--primary)",
-          "text": "var(--wp--preset--color--white)"
+          "text": "#FFFFFF"
         },
         "border": {
-          "radius": "6px"
+          "radius": "8px"
         },
         "typography": {
-          "fontWeight": "600",
-          "fontSize": "var(--wp--preset--font-size--md)"
+          "fontWeight": "700",
+          "fontSize": "1rem",
+          "lineHeight": "1.5"
         },
         "spacing": {
           "padding": {
             "top": "14px",
             "bottom": "14px",
-            "left": "28px",
-            "right": "28px"
+            "left": "24px",
+            "right": "24px"
           }
         },
         ":hover": {
@@ -330,7 +371,7 @@
   "customTemplates": [
     {
       "name": "page-b2b",
-      "title": "Для закладів і партнерів",
+      "title": "Для команд",
       "postTypes": [
         "page"
       ]
@@ -338,6 +379,41 @@
     {
       "name": "page-full",
       "title": "На всю ширину без заголовка",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-profession",
+      "title": "Сторінка професії",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-about",
+      "title": "Про бренд",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-help",
+      "title": "Допомога покупцю",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-contacts",
+      "title": "Контакти",
+      "postTypes": [
+        "page"
+      ]
+    },
+    {
+      "name": "page-service",
+      "title": "Сервісна сторінка (кошик, оформлення, кабінет)",
       "postTypes": [
         "page"
       ]

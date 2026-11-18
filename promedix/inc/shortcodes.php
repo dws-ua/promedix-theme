@@ -104,7 +104,7 @@ function promedix_cart_markup() {
 	}
 	$count = WC()->cart->get_cart_contents_count();
 	return '<a class="pmx-cart" href="' . esc_url( wc_get_cart_url() ) . '" aria-label="' . esc_attr( sprintf( __( 'Кошик, товарів: %d', 'promedix' ), $count ) ) . '">'
-		. '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4h2.2l2.2 11h10.4L20 7.5H6.4"/><circle cx="9.5" cy="19" r="1.3"/><circle cx="16.5" cy="19" r="1.3"/></svg>'
+		. '<svg class="pmx-ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>'
 		. ( $count ? '<span class="pmx-cart__count">' . (int) $count . '</span>' : '' ) . '</a>';
 }
 add_shortcode( 'promedix_cart', 'promedix_cart_markup' );
@@ -121,8 +121,8 @@ add_shortcode( 'promedix_account', function () {
 	if ( ! function_exists( 'wc_get_page_permalink' ) ) {
 		return '';
 	}
-	return '<a class="pmx-icon-btn" href="' . esc_url( wc_get_page_permalink( 'myaccount' ) ) . '" aria-label="' . esc_attr__( 'Особистий кабінет', 'promedix' ) . '">'
-		. '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></a>';
+	return '<a class="pmx-icon-btn pmx-account" href="' . esc_url( wc_get_page_permalink( 'myaccount' ) ) . '" aria-label="' . esc_attr__( 'Особистий кабінет', 'promedix' ) . '">'
+		. '<svg class="pmx-ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></a>';
 } );
 
 /**

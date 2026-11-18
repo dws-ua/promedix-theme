@@ -1,23 +1,29 @@
-<!-- wp:group {"tagName":"header","className":"pmx-header","style":{"spacing":{"padding":{"top":"14px","bottom":"14px"}}},"backgroundColor":"white","layout":{"type":"constrained"}} -->
-<header class="wp-block-group pmx-header has-white-background-color has-background" style="padding-top:14px;padding-bottom:14px"><!-- wp:group {"align":"wide","className":"pmx-header__row","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
-<div class="wp-block-group alignwide pmx-header__row"><!-- wp:group {"className":"pmx-header__left","layout":{"type":"flex","flexWrap":"nowrap"}} -->
-<div class="wp-block-group pmx-header__left"><!-- wp:shortcode -->
-[promedix_logo variant="dark" height="48"]
+<!-- wp:group {"tagName":"header","className":"pmx-header","layout":{"type":"default"}} -->
+<header class="wp-block-group pmx-header"><!-- wp:html -->
+<a class="pmx-skip" href="#pmx-content">Перейти до вмісту</a>
+<!-- /wp:html -->
+
+<!-- wp:group {"className":"pmx-container pmx-header__row","layout":{"type":"default"}} -->
+<div class="wp-block-group pmx-container pmx-header__row"><!-- wp:shortcode -->
+[promedix_logo variant="mono" width="160"]
 <!-- /wp:shortcode -->
 
 <!-- wp:shortcode -->
 [promedix_menu location="primary"]
-<!-- /wp:shortcode --></div>
-<!-- /wp:group -->
+<!-- /wp:shortcode -->
 
-<!-- wp:group {"className":"pmx-header__actions","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+<!-- wp:group {"className":"pmx-header__actions","layout":{"type":"default"}} -->
 <div class="wp-block-group pmx-header__actions"><!-- wp:shortcode -->
 [promedix_lang]
 <!-- /wp:shortcode -->
 
 <!-- wp:html -->
-<button class="pmx-icon-btn" type="button" data-pmx-toggle aria-controls="pmx-search-panel" aria-expanded="false" aria-label="Пошук"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
+<button class="pmx-icon-btn" type="button" data-pmx-toggle aria-controls="pmx-search-panel" aria-expanded="false" aria-label="Пошук"><svg class="pmx-ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
 <!-- /wp:html -->
+
+<!-- wp:shortcode -->
+[promedix_account]
+<!-- /wp:shortcode -->
 
 <!-- wp:shortcode -->
 [promedix_cart]
@@ -29,7 +35,7 @@
 <!-- /wp:group --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"anchor":"pmx-search-panel","className":"pmx-search-panel","layout":{"type":"constrained"}} -->
-<div id="pmx-search-panel" class="wp-block-group pmx-search-panel"><!-- wp:search {"label":"Пошук","showLabel":false,"placeholder":"Пошук моделі: 707, піони, білі…","buttonText":"Знайти","buttonPosition":"button-inside","query":{"post_type":"product"},"className":"pmx-search"} /--></div>
+<!-- wp:group {"anchor":"pmx-search-panel","className":"pmx-search-panel","layout":{"type":"default"}} -->
+<div id="pmx-search-panel" class="wp-block-group pmx-search-panel"><!-- wp:search {"label":"Пошук по каталогу","showLabel":false,"placeholder":"Пошук моделі: 707, піони, білі…","buttonText":"Знайти","buttonPosition":"button-inside","query":{"post_type":"product"},"className":"pmx-search pmx-container"} /--></div>
 <!-- /wp:group --></header>
 <!-- /wp:group -->

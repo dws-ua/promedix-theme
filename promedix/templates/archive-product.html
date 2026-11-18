@@ -1,17 +1,25 @@
 <!-- wp:template-part {"slug":"header","area":"header","tagName":"div"} /-->
 
-<!-- wp:group {"tagName":"main","className":"pmx-main pmx-woo pmx-woo--archive","style":{"spacing":{"padding":{"top":"20px","bottom":"72px"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group pmx-main pmx-woo pmx-woo--archive" style="padding-top:20px;padding-bottom:72px"><!-- wp:shortcode -->
-[promedix_archive_head]
+<!-- wp:group {"tagName":"main","anchor":"pmx-content","className":"pmx-main pmx-woo pmx-woo--archive","layout":{"type":"default"}} -->
+<main id="pmx-content" class="wp-block-group pmx-main pmx-woo pmx-woo--archive"><!-- wp:shortcode -->
+[promedix_page_hero lead="auto"]
 <!-- /wp:shortcode -->
 
-<!-- wp:group {"align":"wide","className":"pmx-catalog","layout":{"type":"default"}} -->
-<div class="wp-block-group alignwide pmx-catalog"><!-- wp:shortcode -->
+<!-- wp:shortcode -->
+[promedix_quick_professions]
+<!-- /wp:shortcode -->
+
+<!-- wp:group {"className":"pmx-container pmx-catalog","layout":{"type":"default"}} -->
+<div class="wp-block-group pmx-container pmx-catalog"><!-- wp:shortcode -->
 [promedix_filters]
 <!-- /wp:shortcode -->
 
 <!-- wp:group {"className":"pmx-catalog__main","layout":{"type":"default"}} -->
-<div class="wp-block-group pmx-catalog__main"><!-- wp:woocommerce/legacy-template {"template":"archive-product"} /--></div>
+<div class="wp-block-group pmx-catalog__main"><!-- wp:shortcode -->
+[promedix_active_filters]
+<!-- /wp:shortcode -->
+
+<!-- wp:woocommerce/legacy-template {"template":"archive-product"} /--></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></main>
 <!-- /wp:group -->

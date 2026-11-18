@@ -271,48 +271,12 @@ function promedix_product_accordions() {
 	return apply_filters( 'promedix_product_accordions', $items );
 }
 
-add_action( 'woocommerce_single_product_summary', function () {
-	global $product;
-	echo '<div class="pmx-acc">';
-	foreach ( promedix_product_accordions() as $key => $a ) {
-		echo '<details class="pmx-acc__item pmx-acc__item--' . esc_attr( $key ) . '" id="pmx-acc-' . esc_attr( $key ) . '"><summary>' . promedix_icon( $a['icon'], 22 ) . '<span>' . esc_html( $a['title'] ) . '</span></summary><div class="pmx-acc__body">' . wp_kses_post( $a['html'] ) . '</div></details>'; // phpcs:ignore
-	}
-	// Description, attributes and reviews keep their content (SEO) but become accordions too.
-	$tabs  = apply_filters( 'woocommerce_product_tabs', array() );
-	$icons = array( 'description' => 'text', 'additional_information' => 'list', 'reviews' => 'star' );
-	foreach ( $tabs as $key => $tab ) {
-		if ( empty( $tab['callback'] ) ) {
-			continue;
-		}
-		ob_start();
-		call_user_func( $tab['callback'], $key, $tab );
-		$html = ob_get_clean();
-		if ( '' === trim( wp_strip_all_tags( $html ) ) ) {
-			continue;
-		}
-		$title = 'additional_information' === $key ? __( 'Характеристики', 'promedix' ) : wp_strip_all_tags( $tab['title'] );
-		echo '<details class="pmx-acc__item pmx-acc__item--' . esc_attr( $key ) . '" id="tab-' . esc_attr( $key ) . '"><summary>' . promedix_icon( isset( $icons[ $key ] ) ? $icons[ $key ] : 'text', 22 ) . '<span>' . esc_html( $title ) . '</span></summary><div class="pmx-acc__body">' . $html . '</div></details>'; // phpcs:ignore
-	}
-	echo '</div>';
-	echo '<p class="pmx-b2b-line">' . esc_html__( 'Купуєте для команди або закладу?', 'promedix' ) . ' <a href="' . esc_url( promedix_b2b_url() ) . '">' . esc_html__( 'Оптові ціни за запитом', 'promedix' ) . '</a></p>';
-}, 40 );
+/* 3.0: the old summary accordions were replaced by full-width tabs (see inc/woo-v3.php). */
 
 /**
  * "Переваги моделі" row under the product.
  */
-add_action( 'woocommerce_after_single_product_summary', function () {
-	$items = apply_filters( 'promedix_product_benefits', array(
-		array( 'leaf', __( 'Комфорт протягом дня', 'promedix' ) ),
-		array( 'waves', __( 'Дихаючий матеріал', 'promedix' ) ),
-		array( 'layers', __( 'Анатомічна підтримка', 'promedix' ) ),
-		array( 'shield', __( 'Зносостійка підошва', 'promedix' ) ),
-	) );
-	echo '<section class="pmx-product-benefits"><h2>' . esc_html__( 'Переваги моделі', 'promedix' ) . '</h2><div class="pmx-product-benefits__row">';
-	foreach ( $items as $it ) {
-		echo '<div class="pmx-product-benefit">' . promedix_icon( $it[0], 36 ) . '<span>' . esc_html( $it[1] ) . '</span></div>'; // phpcs:ignore
-	}
-	echo '</div></section>';
-}, 12 );
+/* 3.0: no generic "benefits" row (product facts come from the attributes tab). */
 
 add_filter( 'woocommerce_product_related_products_heading', function () {
 	return __( 'Схожі моделі', 'promedix' );
