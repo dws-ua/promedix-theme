@@ -846,3 +846,12 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-check-label input[type="checkbox"] { width: 20px !important; height: 20px !important; min-height: 0 !important; flex: none; margin: 2px 0 0 !important; padding: 0 !important; accent-color: var(--primary); }
 .pmx-check-label span { flex: 1; min-width: 0; }
 @media (max-width: 1024px) { .pmx-catalog { row-gap: 12px !important; } }
+
+/* Product: the summary must never slide over the description. Tabs sit in the left column under the gallery,
+   the summary spans both rows beside them (no sticky: a sticky summary overlapped the tabs and related products). */
+@media (min-width: 961px) {
+  .woocommerce div.product > .woocommerce-product-gallery, .woocommerce div.product > div.images { grid-row: 1; }
+  .woocommerce div.product > div.summary { grid-row: 1 / span 2; position: static !important; }
+  .woocommerce div.product > .pmx-tabs { grid-column: 1; grid-row: 2; margin-top: 16px; }
+  .woocommerce div.product > .pmx-tabs .pmx-tabs__list { flex-wrap: wrap; }
+}
