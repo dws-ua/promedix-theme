@@ -200,8 +200,8 @@ add_shortcode( 'promedix_page_hero', function ( $atts ) {
 	$scene = '';
 	if ( 0 === strpos( $image, 'scene:' ) ) {
 		$k     = sanitize_key( substr( $image, 6 ) );
-		$big   = get_theme_file_uri( 'assets/img/scenes/scene-' . $k . '.webp' );
-		$small = get_theme_file_uri( 'assets/img/scenes/scene-' . $k . '-900.webp' );
+		$big   = add_query_arg( 'v', PROMEDIX_VERSION, get_theme_file_uri( 'assets/img/scenes/scene-' . $k . '.webp' ) );
+		$small = add_query_arg( 'v', PROMEDIX_VERSION, get_theme_file_uri( 'assets/img/scenes/scene-' . $k . '-900.webp' ) );
 		$scene = '<picture class="pmx-page-hero__scene"><source media="(max-width: 760px)" srcset="' . esc_url( $small ) . '"><img src="' . esc_url( $big ) . '" alt="" width="1536" height="1024" fetchpriority="high"></picture>';
 		$image = '';
 	}
