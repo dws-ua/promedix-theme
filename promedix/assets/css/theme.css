@@ -586,6 +586,18 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-tabs__panel table.shop_attributes th, .pmx-tabs__panel table.shop_attributes td { border: 0; border-bottom: 1px solid var(--border); background: transparent !important; padding: 12px 0; font-style: normal; text-align: left; vertical-align: top; }
 .pmx-tabs__panel table.shop_attributes th { width: 40%; font-weight: 700; color: var(--heading); padding-right: 16px; }
 .pmx-tabs__panel table.shop_attributes td p { margin: 0; }
+/* Compact specs: tight rows, label and value close together; two columns of rows on desktop. */
+.pmx-tabs__panel table.shop_attributes { max-width: 1000px; }
+.pmx-tabs__panel table.shop_attributes th, .pmx-tabs__panel table.shop_attributes td { padding: 10px 0 !important; line-height: 1.45; font-size: .9375rem; }
+.pmx-tabs__panel table.shop_attributes th { width: 45%; font-weight: 500; color: var(--text-muted); }
+.pmx-tabs__panel table.shop_attributes td { color: var(--heading); font-weight: 600; }
+.pmx-tabs__panel table.shop_attributes td p, .pmx-prose table.shop_attributes td p { margin: 0 !important; }
+@media (min-width: 900px) {
+  .pmx-tabs__panel table.shop_attributes, .pmx-tabs__panel table.shop_attributes tbody { display: block; }
+  .pmx-tabs__panel table.shop_attributes tbody { display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px; }
+  .pmx-tabs__panel table.shop_attributes tr { display: grid; grid-template-columns: 45% 1fr; border-bottom: 1px solid var(--border); }
+  .pmx-tabs__panel table.shop_attributes th, .pmx-tabs__panel table.shop_attributes td { display: block; width: auto; border-bottom: 0; }
+}
 .woocommerce div.product .related, .woocommerce div.product .upsells { margin-top: var(--section); }
 .woocommerce div.product .related > h2, .woocommerce div.product .upsells > h2 { margin-bottom: 24px; }
 .pmx-dialog { border: 0; border-radius: var(--r-lg); padding: 0; max-width: min(520px, calc(100vw - 32px)); box-shadow: 0 24px 64px rgba(20,45,56,.2); color: var(--text); }
