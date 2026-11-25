@@ -89,6 +89,47 @@ function promedix_archive_base_url() {
 	return function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
 }
 
+/**
+ * WPML: attribute terms come in a uk and a ru copy (e.g. "35" and "35-ru"), and
+ * products can carry both. Map every term to its current-language version and
+ * keep each one once, so the filter does not list sizes, colours or prints twice
+ * or in Russian on the Ukrainian site.
+ */
+function promedix_lang_terms( $terms, $tax ) {
+	$out  = array();
+	$lang = apply_filters( 'wpml_current_language', null );
+	foreach ( (array) $terms as $term ) {
+		if ( ! $term instanceof WP_Term ) {
+			continue;
+		}
+		$id = (int) apply_filters( 'wpml_object_id', $term->term_id, $tax, true );
+		if ( $id && $id !== (int) $term->term_id ) {
+			$tr   = get_term( $id, $tax );
+			$term = $tr instanceof WP_Term ? $tr : $term;
+		}
+		// A copy in another language with no translation link: drop it.
+		if ( $lang ) {
+			$tl = apply_filters( 'wpml_element_language_code', null, array( 'element_id' => (int) $term->term_taxonomy_id, 'element_type' => 'tax_' . $tax ) );
+			if ( $tl && $tl !== $lang ) {
+				continue;
+			}
+		}
+		// No products carry it (e.g. only its other-language copy is used).
+		if ( isset( $term->count ) && 0 === (int) $term->count ) {
+			continue;
+		}
+		$key = $term->term_id;
+		// Same visible name twice (no WPML link between the copies): keep the first.
+		foreach ( $out as $o ) {
+			if ( $o->name === $term->name ) {
+				continue 2;
+			}
+		}
+		$out[ $key ] = $term;
+	}
+	return array_values( $out );
+}
+
 /** Price range of the products in the current archive (from the WooCommerce lookup table). */
 function promedix_archive_price_range( $ids ) {
 	global $wpdb;
@@ -119,11 +160,7 @@ function promedix_sc_filters_v3() {
 		if ( is_wp_error( $t ) ) {
 			return array();
 		}
-		$u = array();
-		foreach ( $t as $term ) {
-			$u[ $term->term_id ] = $term;
-		}
-		return array_values( $u );
+		return promedix_lang_terms( $t, $tax );
 	};
 	$groups = '';
 	$n_on   = 0;

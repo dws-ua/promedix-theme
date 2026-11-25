@@ -180,6 +180,7 @@ add_shortcode( 'promedix_picker', function () {
 	if ( is_wp_error( $sizes ) ) {
 		$sizes = array();
 	}
+	$sizes = function_exists( 'promedix_lang_terms' ) ? promedix_lang_terms( $sizes, 'pa_size' ) : $sizes;
 	usort( $sizes, function ( $a, $b ) {
 		return (float) $a->name <=> (float) $b->name;
 	} );
