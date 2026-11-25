@@ -1076,3 +1076,21 @@ html.pmx-drawer-open #unitalk-root { visibility: hidden; }
   /* Room for the floating call button under the last footer line. */
   .pmx-footer__bottom { flex-wrap: wrap; padding-bottom: 76px !important; }
 }
+
+/* ---------- Size guide (3.6.0) ---------- */
+.pmx-dialog--sizes { max-width: min(640px, calc(100vw - 24px)); max-height: calc(100vh - 32px); }
+.pmx-dialog--sizes .pmx-dialog__in { max-height: calc(100vh - 32px); overflow-y: auto; }
+.pmx-dialog--sizes h3, .pmx-tabs__panel .pmx-howto + h3 { font-size: 1.125rem; margin: 20px 0 10px; }
+.pmx-dialog--sizes h2 + h3 { margin-top: 0; }
+.pmx-howto { display: flex; gap: 20px; align-items: flex-start; color: var(--heading); }
+.pmx-howto__pic { flex: none; }
+.pmx-howto__steps { margin: 0; padding-left: 1.25em; display: grid; gap: 6px; font-size: .9375rem; line-height: 1.5; color: var(--text); }
+.pmx-sizetable { width: 100%; max-width: 420px; border-collapse: collapse; margin: 0 0 16px; font-size: .9375rem; }
+.pmx-sizetable caption { text-align: left; font-weight: 700; color: var(--heading); padding: 0 0 8px; caption-side: top; }
+.pmx-sizetable th, .pmx-sizetable td { padding: 8px 12px !important; border: 0; border-bottom: 1px solid var(--border); text-align: left; background: transparent; }
+.pmx-sizetable thead th { font-size: .8125rem; font-weight: 700; color: var(--text-muted); background: var(--bg-subtle); }
+.pmx-sizetable tbody th { font-weight: 700; color: var(--heading); width: 40%; }
+.pmx-sizetable tbody tr:nth-child(even) { background: var(--bg-subtle); }
+.pmx-sizetables { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px 32px; margin-top: 16px; }
+.pmx-sizehint { font-size: .9375rem; }
+@media (max-width: 600px) { .pmx-howto { flex-direction: column; gap: 12px; } .pmx-howto__pic { width: 72px; height: 90px; } .pmx-dialog--sizes .pmx-dialog__in { padding: 20px; } }

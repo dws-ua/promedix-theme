@@ -464,11 +464,9 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 	if ( $care ) {
 		$tabs = array_slice( $tabs, 0, 3, true ) + array( 'care' => array( __( 'Догляд', 'promedix' ), $care ) ) + array_slice( $tabs, 3, null, true );
 	}
-	$c          = promedix_contacts();
-	$tabs_sizes = '<p>' . esc_html__( 'Не впевнені щодо розміру? Зателефонуйте, і ми допоможемо підібрати пару:', 'promedix' ) . ' <a href="tel:' . esc_attr( $c['phone_retail_href'] ) . '">' . esc_html( $c['phone_retail'] ) . '</a>.</p>';
-	if ( promedix_link( 'exchange' ) ) {
-		$tabs_sizes .= '<p><a href="' . esc_url( promedix_link( 'exchange' ) ) . '">' . esc_html__( 'Умови обміну, якщо розмір не підійшов', 'promedix' ) . '</a></p>';
-	}
+	$tabs_sizes = promedix_size_guide_html( get_the_ID() );
+	// "Розмірна сітка" right after "Характеристики".
+	$tabs = array_slice( $tabs, 0, 2, true ) + array( 'sizes' => array( __( 'Розмірна сітка', 'promedix' ), $tabs_sizes ) ) + array_slice( $tabs, 2, null, true );
 	if ( ! $tabs ) {
 		return;
 	}
@@ -485,7 +483,7 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 		$i++;
 	}
 	echo '</section>';
-	echo '<dialog class="pmx-dialog" id="pmx-size-dialog" aria-labelledby="pmx-size-dialog-t"><div class="pmx-dialog__in"><h2 id="pmx-size-dialog-t">' . esc_html__( 'Як обрати розмір', 'promedix' ) . '</h2>' . $tabs_sizes . '<form method="dialog"><button class="pmx-btn">' . esc_html__( 'Зрозуміло', 'promedix' ) . '</button></form></div></dialog>'; // phpcs:ignore
+	echo '<dialog class="pmx-dialog pmx-dialog--sizes" id="pmx-size-dialog" aria-labelledby="pmx-size-dialog-t"><div class="pmx-dialog__in"><h2 id="pmx-size-dialog-t">' . esc_html__( 'Як обрати розмір', 'promedix' ) . '</h2>' . $tabs_sizes . '<form method="dialog"><button class="pmx-btn">' . esc_html__( 'Зрозуміло', 'promedix' ) . '</button></form></div></dialog>'; // phpcs:ignore
 }, 10 );
 
 add_filter( 'woocommerce_output_related_products_args', function ( $a ) {
