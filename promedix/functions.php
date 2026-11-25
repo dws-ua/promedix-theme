@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PROMEDIX_VERSION', '3.6.0' );
+define( 'PROMEDIX_VERSION', '3.6.1' );
 
 require_once get_theme_file_path( 'inc/helpers.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
@@ -17,6 +17,7 @@ require_once get_theme_file_path( 'inc/seo-texts.php' );
 require_once get_theme_file_path( 'inc/landings.php' );
 require_once get_theme_file_path( 'inc/sizes.php' );
 require_once get_theme_file_path( 'inc/woo-v3.php' );
+require_once get_theme_file_path( 'inc/quick-order.php' );
 require_once get_theme_file_path( 'inc/mobile.php' );
 
 /**

@@ -225,6 +225,11 @@
       a.className = 'pmx-size-link';
       a.innerHTML = '<svg class="pmx-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 15 15 3l6 6L9 21z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2"/></svg><span>Як обрати розмір</span>';
       a.addEventListener('click', function () { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
+      /* Click on the dimmed backdrop (the dialog element itself, outside its content) closes it. */
+      if (!dlg.dataset.pmxBackdrop) {
+        dlg.dataset.pmxBackdrop = '1';
+        dlg.addEventListener('click', function (e) { if (e.target === dlg && dlg.close) dlg.close(); });
+      }
       tbl.parentNode.insertBefore(a, tbl.nextSibling);
     }
   }
@@ -551,4 +556,70 @@
     });
     mo.observe(document.body, { childList: true });
   }
+})();
+
+/* "Купити в один клік": take the chosen size from the cart form, ask name + phone, create the order. */
+(function () {
+  var dlg = document.getElementById('pmx-oneclick-dialog');
+  if (!dlg) return;
+  var f = dlg.querySelector('[data-pmx-oneclick-form]');
+  var done = dlg.querySelector('[data-pmx-oneclick-done]');
+  var err = f.querySelector('.pmx-oneclick-form__err');
+  dlg.addEventListener('click', function (e) { if (e.target === dlg && dlg.close) dlg.close(); });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pmx-oneclick]');
+    if (!b) return;
+    e.preventDefault();
+    var cart = b.closest('form.cart');
+    if (!cart) return;
+    var need = cart.querySelector('.pmx-oneclick__need');
+    var vInput = cart.querySelector('input[name=variation_id]');
+    var isVar = cart.classList.contains('variations_form');
+    var vid = vInput ? parseInt(vInput.value, 10) || 0 : 0;
+    if (isVar && !vid) {
+      if (need) need.hidden = false;
+      var tiles = cart.querySelector('.pmx-tiles, table.variations');
+      if (tiles) tiles.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (need) need.hidden = true;
+    var pid = cart.getAttribute('data-product_id') || (cart.querySelector('[name=add-to-cart]') || {}).value || '';
+    var qty = cart.querySelector('input.qty');
+    f.product_id.value = pid;
+    f.variation_id.value = vid || '';
+    f.quantity.value = qty ? qty.value : 1;
+    var title = document.querySelector('.product_title');
+    var size = [];
+    cart.querySelectorAll('table.variations select').forEach(function (s) { if (s.value) size.push(s.options[s.selectedIndex].textContent); });
+    var what = dlg.querySelector('[data-pmx-oneclick-what]');
+    if (what) what.textContent = (title ? title.textContent.trim() : '') + (size.length ? ', розмір ' + size.join(', ') : '') + ', ' + f.quantity.value + ' шт.';
+    f.hidden = false; done.hidden = true; err.hidden = true;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    setTimeout(function () { f.phone.focus(); }, 50);
+  });
+  /* Size picked later: hide the hint. */
+  document.addEventListener('change', function (e) {
+    var cart = e.target.closest && e.target.closest('form.cart');
+    var need = cart && cart.querySelector('.pmx-oneclick__need');
+    if (need) need.hidden = true;
+  });
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var digits = (f.phone.value || '').replace(/\D+/g, '');
+    if (digits.length < 10) { err.textContent = 'Вкажіть номер телефону, наприклад +380 63 100 86 86.'; err.hidden = false; f.phone.focus(); return; }
+    var go = f.querySelector('[type=submit]');
+    go.disabled = true; go.classList.add('is-loading');
+    fetch(f.action, { method: 'POST', body: new FormData(f), credentials: 'same-origin' })
+      .then(function (r) { return r.json().catch(function () { return { success: false, data: {} }; }); })
+      .then(function (res) {
+        var msg = res && res.data && res.data.message;
+        if (res && res.success) {
+          f.hidden = true; done.textContent = msg || 'Дякуємо! Ми зателефонуємо вам.'; done.hidden = false;
+        } else {
+          err.textContent = msg || 'Не вдалося надіслати. Зателефонуйте нам, будь ласка.'; err.hidden = false;
+        }
+      })
+      .catch(function () { err.textContent = 'Немає з’єднання. Спробуйте ще раз або зателефонуйте нам.'; err.hidden = false; })
+      .then(function () { go.disabled = false; go.classList.remove('is-loading'); });
+  });
 })();

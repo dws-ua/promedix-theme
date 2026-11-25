@@ -465,8 +465,8 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 		$tabs = array_slice( $tabs, 0, 3, true ) + array( 'care' => array( __( 'Догляд', 'promedix' ), $care ) ) + array_slice( $tabs, 3, null, true );
 	}
 	$tabs_sizes = promedix_size_guide_html( get_the_ID() );
-	// "Розмірна сітка" right after "Характеристики".
-	$tabs = array_slice( $tabs, 0, 2, true ) + array( 'sizes' => array( __( 'Розмірна сітка', 'promedix' ), $tabs_sizes ) ) + array_slice( $tabs, 2, null, true );
+	// "Розмірна сітка" right after "Характеристики": the table only, the how-to lives in the dialog.
+	$tabs = array_slice( $tabs, 0, 2, true ) + array( 'sizes' => array( __( 'Розмірна сітка', 'promedix' ), promedix_size_guide_html( get_the_ID(), false ) ) ) + array_slice( $tabs, 2, null, true );
 	if ( ! $tabs ) {
 		return;
 	}
@@ -483,7 +483,7 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 		$i++;
 	}
 	echo '</section>';
-	echo '<dialog class="pmx-dialog pmx-dialog--sizes" id="pmx-size-dialog" aria-labelledby="pmx-size-dialog-t"><div class="pmx-dialog__in"><h2 id="pmx-size-dialog-t">' . esc_html__( 'Як обрати розмір', 'promedix' ) . '</h2>' . $tabs_sizes . '<form method="dialog"><button class="pmx-btn">' . esc_html__( 'Зрозуміло', 'promedix' ) . '</button></form></div></dialog>'; // phpcs:ignore
+	echo '<dialog class="pmx-dialog pmx-dialog--sizes" id="pmx-size-dialog" aria-labelledby="pmx-size-dialog-t"><div class="pmx-dialog__head"><h2 id="pmx-size-dialog-t">' . esc_html__( 'Як обрати розмір', 'promedix' ) . '</h2><form method="dialog"><button class="pmx-icon-btn pmx-dialog__x" aria-label="' . esc_attr__( 'Закрити', 'promedix' ) . '"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form></div><div class="pmx-dialog__in">' . $tabs_sizes . '<form method="dialog"><button class="pmx-btn">' . esc_html__( 'Зрозуміло', 'promedix' ) . '</button></form></div></dialog>'; // phpcs:ignore
 }, 10 );
 
 add_filter( 'woocommerce_output_related_products_args', function ( $a ) {
