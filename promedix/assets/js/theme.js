@@ -6,6 +6,8 @@
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-pmx-toggle]');
     if (!t) return;
+    /* Burger opens the off-canvas drawer when the theme printed one. */
+    if (t.classList.contains('pmx-burger') && document.getElementById('pmx-drawer')) { openDrawer(t); return; }
     var target = document.getElementById(t.getAttribute('aria-controls'));
     if (!target) return;
     var open = t.getAttribute('aria-expanded') === 'true';
@@ -16,6 +18,52 @@
       if (input) input.focus();
     }
   });
+  /* Off-canvas drawer: menu, contacts, language. */
+  var drawerOpener = null;
+  function openDrawer(opener) {
+    var d = document.getElementById('pmx-drawer');
+    if (!d) return;
+    drawerOpener = opener || null;
+    d.hidden = false;
+    document.documentElement.classList.add('pmx-drawer-open');
+    if (opener) opener.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(function () { d.classList.add('is-open'); });
+    var close = d.querySelector('.pmx-drawer__close');
+    if (close) close.focus();
+  }
+  function closeDrawer() {
+    var d = document.getElementById('pmx-drawer');
+    if (!d || d.hidden) return;
+    d.classList.remove('is-open');
+    document.documentElement.classList.remove('pmx-drawer-open');
+    document.querySelectorAll('.pmx-burger').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+    setTimeout(function () { d.hidden = true; }, 250);
+    if (drawerOpener) drawerOpener.focus();
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-pmx-drawer-close]')) { closeDrawer(); return; }
+    /* A link inside the drawer: close it (same-page anchors otherwise stay hidden behind it). */
+    if (e.target.closest('#pmx-drawer a')) closeDrawer();
+  });
+  document.addEventListener('keydown', function (e) {
+    var d = document.getElementById('pmx-drawer');
+    if (!d || d.hidden) return;
+    if (e.key === 'Escape') { closeDrawer(); return; }
+    if (e.key !== 'Tab') return;
+    var f = d.querySelectorAll('a[href], button:not([disabled]), input, select');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  /* Bottom bar: search opens the header search panel. */
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-pmx-bnav-search]')) return;
+    var t = document.querySelector('.pmx-header [aria-controls="pmx-search-panel"]');
+    if (t) { window.scrollTo({ top: 0, behavior: 'smooth' }); if (t.getAttribute('aria-expanded') !== 'true') t.click(); else { var i = document.querySelector('#pmx-search-panel input[type=search]'); if (i) i.focus(); } }
+  });
+
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     document.querySelectorAll('[data-pmx-toggle][aria-expanded="true"]').forEach(function (t) { t.click(); });
@@ -24,7 +72,11 @@
   /* Favourites: heart on product cards and gallery, remembered in this browser. */
   var KEY = 'pmx-fav';
   function favs() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (err) { return []; } }
-  function saveFavs(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (err) {} }
+  function favCount() {
+    var n = favs().length;
+    document.querySelectorAll('.pmx-bnav__count--fav').forEach(function (el) { el.textContent = n; el.hidden = !n; });
+  }
+  function saveFavs(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (err) {} favCount(); }
   function productId(el) {
     var m = (el.className || '').match(/post-(\d+)/);
     return m ? m[1] : null;
@@ -46,6 +98,7 @@
     });
   }
   document.querySelectorAll('ul.products').forEach(addHearts);
+  favCount();
 
   /* "Показати ще": fetch the next catalog page and append its cards to the grid.
      The button is a plain link to ?page N+1, so without JS (or on error) it just navigates. */
@@ -460,4 +513,42 @@
       if (btn) { btn.disabled = true; btn.classList.add('is-loading'); btn.setAttribute('aria-busy', 'true'); }
     });
   });
+})();
+
+/* Bottom bar vs third-party floating buttons (Unitalk call button etc.):
+   lift any fixed element that would sit on top of the bar. */
+(function () {
+  var bar = document.querySelector('.pmx-bnav');
+  if (!bar) return;
+  function lift() {
+    if (getComputedStyle(bar).display === 'none') return;
+    var top = bar.getBoundingClientRect().top;
+    var all = document.body.querySelectorAll('body > *:not(.pmx-bnav):not(.pmx-drawer):not(script):not(style), body > * > *:not(script), #unitalk-root *, #divForNextelButton2 *');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el.closest('.pmx-bnav, .pmx-drawer, .pmx-header, .pmx-filters, .wp-site-blocks, #wpadminbar')) continue;
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'fixed') continue;
+      var r = el.getBoundingClientRect();
+      if (!r.width || !r.height || r.height > window.innerHeight / 2) continue;
+      var cur = parseFloat(el.dataset.pmxLift || '0');
+      var overlap = r.bottom + cur - top + 12;
+      if (overlap > 0 && Math.abs(overlap - cur) > 1) {
+        el.dataset.pmxLift = overlap;
+        el.style.setProperty('translate', '0 ' + (-overlap) + 'px', 'important');
+      }
+    }
+  }
+  var t;
+  function soon() { clearTimeout(t); t = setTimeout(lift, 150); }
+  window.addEventListener('load', function () { lift(); setTimeout(lift, 1500); setTimeout(lift, 4000); });
+  window.addEventListener('resize', soon);
+  if (window.MutationObserver) {
+    var mo = new MutationObserver(function () {
+      soon();
+      var root = document.getElementById('unitalk-root');
+      if (root && !root.dataset.pmxWatched) { root.dataset.pmxWatched = '1'; new MutationObserver(soon).observe(root, { childList: true, subtree: true }); }
+    });
+    mo.observe(document.body, { childList: true });
+  }
 })();
