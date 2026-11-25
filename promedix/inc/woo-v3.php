@@ -308,6 +308,43 @@ add_filter( 'woocommerce_pagination_args', function ( $args ) {
 	return $args;
 } );
 
+/*
+ * "Показати ще" above the numbered pagination. It is a real link to the next
+ * page (works without JS, keeps the paginated URLs for SEO); theme.js turns it
+ * into a fetch that appends the next page's cards to the grid.
+ */
+function promedix_loadmore_label() {
+	$label = __( 'Показати ще', 'promedix' );
+	$lang  = apply_filters( 'wpml_current_language', null );
+	if ( 'ru' === $lang && 'Показати ще' === $label ) {
+		$label = 'Показать ещё';
+	}
+	return $label;
+}
+function promedix_loadmore_status( $shown, $total ) {
+	$lang = apply_filters( 'wpml_current_language', null );
+	$tpl  = __( 'Показано %1$d з %2$d', 'promedix' );
+	if ( 'ru' === $lang && 'Показано %1$d з %2$d' === $tpl ) {
+		$tpl = 'Показано %1$d из %2$d';
+	}
+	return sprintf( $tpl, $shown, $total );
+}
+add_action( 'woocommerce_after_shop_loop', function () {
+	$total_pages = (int) wc_get_loop_prop( 'total_pages' );
+	$current     = max( 1, (int) wc_get_loop_prop( 'current_page' ) );
+	if ( $total_pages < 2 || $current >= $total_pages ) {
+		return;
+	}
+	$total = (int) wc_get_loop_prop( 'total' );
+	$per   = max( 1, (int) wc_get_loop_prop( 'per_page' ) );
+	$shown = min( $total, $current * $per );
+	$next  = remove_query_arg( 'add-to-cart', get_pagenum_link( $current + 1, false ) );
+	echo '<div class="pmx-loadmore" data-pmx-loadmore-wrap>'
+		. '<a class="pmx-btn pmx-btn--secondary pmx-loadmore__btn" href="' . esc_url( $next ) . '" data-pmx-loadmore>' . esc_html( promedix_loadmore_label() ) . '</a>'
+		. '<p class="pmx-loadmore__status" aria-live="polite" data-pmx-loadmore-status data-total="' . esc_attr( $total ) . '">' . esc_html( promedix_loadmore_status( $shown, $total ) ) . '</p>'
+		. '</div>';
+}, 8 );
+
 /* Loop images: fixed dimensions + lazy below the fold (WooCommerce already prints width/height). */
 add_filter( 'woocommerce_loop_add_to_cart_link', '__return_empty_string' );
 

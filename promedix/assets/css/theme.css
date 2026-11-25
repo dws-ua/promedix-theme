@@ -483,6 +483,12 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .woocommerce-error { background: var(--error-bg) !important; color: var(--error) !important; }
 .woocommerce-info::before, .woocommerce-message::before { color: var(--primary) !important; top: 16px !important; left: 20px !important; }
 .woocommerce-error::before { color: var(--error) !important; top: 16px !important; left: 20px !important; }
+/* "Показати ще" above the numbered pagination */
+.pmx-loadmore { margin-top: 48px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.pmx-loadmore__btn { min-width: 260px; }
+.pmx-loadmore__status { margin: 0; font-size: .875rem; color: var(--text-muted); }
+.pmx-loadmore + nav.woocommerce-pagination, .woocommerce .pmx-loadmore + nav.woocommerce-pagination { margin-top: 24px; }
+@media (max-width: 600px) { .pmx-loadmore__btn { width: 100%; min-width: 0; } }
 .woocommerce nav.woocommerce-pagination { margin-top: 48px; }
 .woocommerce nav.woocommerce-pagination ul { border: 0 !important; display: flex !important; gap: 8px; justify-content: center; }
 .woocommerce nav.woocommerce-pagination ul li { border: 0 !important; }

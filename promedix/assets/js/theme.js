@@ -39,9 +39,60 @@
     b.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>';
     return b;
   }
-  document.querySelectorAll('ul.products li.product').forEach(function (li) {
-    var id = productId(li);
-    if (id && !li.querySelector('.pmx-fav')) li.appendChild(heart(id));
+  function addHearts(root) {
+    root.querySelectorAll('li.product').forEach(function (li) {
+      var id = productId(li);
+      if (id && !li.querySelector('.pmx-fav')) li.appendChild(heart(id));
+    });
+  }
+  document.querySelectorAll('ul.products').forEach(addHearts);
+
+  /* "Показати ще": fetch the next catalog page and append its cards to the grid.
+     The button is a plain link to ?page N+1, so without JS (or on error) it just navigates. */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-pmx-loadmore]');
+    if (!btn || !window.fetch || !window.DOMParser) return;
+    var wrap = btn.closest('[data-pmx-loadmore-wrap]');
+    var scope = wrap && wrap.parentNode;
+    var grid = scope && scope.querySelector('ul.products');
+    if (!grid) return;
+    e.preventDefault();
+    if (btn.classList.contains('is-loading')) return;
+    btn.classList.add('is-loading');
+    btn.setAttribute('aria-busy', 'true');
+    var url = btn.href;
+    fetch(url, { credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var items = doc.querySelectorAll('ul.products li.product');
+        if (!items.length) throw new Error('empty');
+        var first = null;
+        items.forEach(function (li) {
+          var node = document.importNode(li, true);
+          grid.appendChild(node);
+          if (!first) first = node;
+        });
+        addHearts(grid);
+        /* Numbered pagination follows the last loaded page. */
+        var navOld = scope.querySelector('nav.woocommerce-pagination');
+        var navNew = doc.querySelector('nav.woocommerce-pagination');
+        if (navOld && navNew) navOld.replaceWith(document.importNode(navNew, true));
+        var status = wrap.querySelector('[data-pmx-loadmore-status]');
+        var nextBtn = doc.querySelector('[data-pmx-loadmore]');
+        if (nextBtn) {
+          btn.href = nextBtn.getAttribute('href');
+          var nextStatus = doc.querySelector('[data-pmx-loadmore-status]');
+          if (status && nextStatus) status.textContent = nextStatus.textContent;
+          btn.classList.remove('is-loading');
+          btn.removeAttribute('aria-busy');
+        } else {
+          wrap.remove();
+        }
+        var link = first && first.querySelector('a');
+        if (link) link.focus({ preventScroll: true });
+      })
+      .catch(function () { location.href = url; });
   });
   var single = document.querySelector('div.product[id^="product-"]');
   var gallery = single && single.querySelector('.woocommerce-product-gallery');
