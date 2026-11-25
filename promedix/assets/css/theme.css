@@ -1140,3 +1140,5 @@ html.pmx-drawer-open #unitalk-root { visibility: hidden; }
 .pmx-credit { margin: 0; font-size: .75rem; color: var(--text-muted); }
 .pmx-credit a { color: inherit; text-decoration: none; }
 .pmx-credit a:hover { color: var(--primary); text-decoration: underline; }
+/* Full product name in cards (women's / men's 601 look alike otherwise); up to 2 lines keep the prices aligned. */
+.woocommerce ul.products li.product .woocommerce-loop-product__title { min-height: calc(2 * 1.47em); overflow-wrap: anywhere; }
