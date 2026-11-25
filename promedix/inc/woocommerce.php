@@ -24,17 +24,28 @@ add_action( 'woocommerce_before_cart_totals', function () {
  */
 add_filter( 'woocommerce_billing_fields', function ( $fields ) {
 	if ( isset( $fields['billing_company'] ) ) {
-		$fields['billing_company']['label']    = __( 'Назва закладу або компанії (необов’язково)', 'promedix' );
+		$fields['billing_company']['label']    = __( 'Назва закладу або компанії', 'promedix' );
 		$fields['billing_company']['required'] = false;
 		$fields['billing_company']['priority'] = 25;
 	}
 	$fields['billing_edrpou'] = array(
-		'label'    => __( 'Код ЄДРПОУ для рахунку (необов’язково)', 'promedix' ),
+		'label'    => __( 'Код ЄДРПОУ для рахунку', 'promedix' ),
 		'required' => false,
 		'class'    => array( 'form-row-wide' ),
 		'priority' => 26,
 		'type'     => 'text',
 	);
+	// WooCommerce adds "(необов’язково)" to optional labels itself.
+	// Only one country to ship to: hide the field (its value is still sent).
+	if ( isset( $fields['billing_country'] ) && function_exists( 'WC' ) && WC()->countries && 1 === count( WC()->countries->get_allowed_countries() ) ) {
+		$fields['billing_country']['class'][] = 'pmx-country-single';
+	}
+	return $fields;
+} );
+add_filter( 'woocommerce_shipping_fields', function ( $fields ) {
+	if ( isset( $fields['shipping_country'] ) && function_exists( 'WC' ) && WC()->countries && 1 === count( WC()->countries->get_shipping_countries() ) ) {
+		$fields['shipping_country']['class'][] = 'pmx-country-single';
+	}
 	return $fields;
 } );
 

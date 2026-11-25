@@ -1066,3 +1066,13 @@ html.pmx-drawer-open #unitalk-root { visibility: hidden; }
   /* Sticky "Додати в кошик" on the product page sits just above the bottom bar. */
   .pmx-has-bnav .pmx-woo--single .single_variation_wrap .woocommerce-variation-add-to-cart { bottom: calc(58px + env(safe-area-inset-bottom)); padding-bottom: 12px; }
 }
+
+/* ---------- Checkout tidy-up (3.5.1) ---------- */
+.woocommerce form .form-row.pmx-country-single { display: none !important; }
+.woocommerce form .form-row .select2-container { width: 100% !important; }
+.woocommerce form .form-row .woocommerce-input-wrapper { display: block; width: 100%; }
+.woocommerce form .form-row .woocommerce-input-wrapper > strong { display: block; padding: 12px 0; font-weight: 700; color: var(--heading); }
+@media (max-width: 781px) {
+  /* Room for the floating call button under the last footer line. */
+  .pmx-footer__bottom { flex-wrap: wrap; padding-bottom: 76px !important; }
+}

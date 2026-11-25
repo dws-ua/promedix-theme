@@ -97,9 +97,6 @@ add_action( 'wp_footer', function () {
 	if ( is_admin() || ! function_exists( 'wc_get_page_permalink' ) ) {
 		return;
 	}
-	if ( is_cart() || is_checkout() ) {
-		return; // Checkout has its own sticky actions; keep the screen clean.
-	}
 	$home = apply_filters( 'wpml_home_url', home_url( '/' ) );
 	$shop = wc_get_page_permalink( 'shop' );
 	$fav  = function_exists( 'promedix_link' ) ? promedix_link( 'wishlist' ) : '';
@@ -118,7 +115,7 @@ add_action( 'wp_footer', function () {
 }, 6 );
 
 add_filter( 'body_class', function ( $classes ) {
-	if ( function_exists( 'is_cart' ) && ! is_cart() && ! is_checkout() ) {
+	if ( function_exists( 'wc_get_page_permalink' ) ) {
 		$classes[] = 'pmx-has-bnav';
 	}
 	return $classes;
