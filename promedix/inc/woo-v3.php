@@ -399,7 +399,10 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 	}
 	$m        = promedix_shop_methods();
 	$delivery = '';
-	if ( $m['shipping'] ) {
+	$delivery_text = promedix_delivery_html();
+	if ( $delivery_text ) {
+		$delivery .= $delivery_text;
+	} elseif ( $m['shipping'] ) {
 		$delivery .= '<h3>' . esc_html__( 'Доставка', 'promedix' ) . '</h3><ul>';
 		foreach ( $m['shipping'] as $s ) {
 			$delivery .= '<li>' . esc_html( $s[0] ) . '</li>';

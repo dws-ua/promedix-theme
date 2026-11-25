@@ -426,6 +426,15 @@ function promedix_shop_methods() {
 	return $out;
 }
 
+/**
+ * Shop's own delivery text (site option promedix_delivery_html), shared by the
+ * product tab and the help page. Empty string when not set.
+ */
+function promedix_delivery_html() {
+	$html = trim( (string) get_option( 'promedix_delivery_html', '' ) );
+	return '' === $html ? '' : wp_kses_post( wpautop( $html ) );
+}
+
 function promedix_page_content( $key ) {
 	$slugs = promedix_page_slugs();
 	$page  = isset( $slugs[ $key ] ) ? get_page_by_path( $slugs[ $key ] ) : null;
@@ -470,8 +479,10 @@ add_shortcode( 'promedix_help', function () {
 		}
 		return $h . '</ul>';
 	};
-	$body  = '<section id="pmx-help-delivery" class="pmx-help__sec"><h2>' . esc_html__( 'Доставка', 'promedix' ) . '</h2>' . $tiles( $m['shipping'], array( 'nova_poshta_shipping' => 'truck', 'free_shipping' => 'box', 'local_pickup' => 'pin' ) )
-		. '<p class="pmx-muted">' . esc_html__( 'Спосіб і вартість доставки уточнюються під час оформлення.', 'promedix' ) . '</p></section>';
+	$delivery_text = promedix_delivery_html();
+	$body  = '<section id="pmx-help-delivery" class="pmx-help__sec"><h2>' . esc_html__( 'Доставка', 'promedix' ) . '</h2>'
+		. ( $delivery_text ? '<div class="pmx-prose">' . $delivery_text . '</div>' : $tiles( $m['shipping'], array( 'nova_poshta_shipping' => 'truck', 'free_shipping' => 'box', 'local_pickup' => 'pin' ) )
+		. '<p class="pmx-muted">' . esc_html__( 'Спосіб і вартість доставки уточнюються під час оформлення.', 'promedix' ) . '</p>' ) . '</section>';
 	$body .= '<section id="pmx-help-payment" class="pmx-help__sec"><h2>' . esc_html__( 'Оплата', 'promedix' ) . '</h2>' . $tiles( $m['payment'], array( 'cheque' => 'card', 'cod' => 'box' ) )
 		. '<p class="pmx-muted">' . esc_html__( 'Доступні способи оплати показані в замовленні.', 'promedix' ) . '</p></section>';
 	// The shop's own page texts (Оплата і доставка / Обмін та повернення) are shown as they are.
@@ -479,7 +490,8 @@ add_shortcode( 'promedix_help', function () {
 	if ( $current === $slugs['delivery'] || $current === $slugs['exchange'] ) {
 		$page_text = promedix_demote_h1( apply_filters( 'the_content', get_post_field( 'post_content', get_the_ID() ) ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 	}
-	if ( $page_text && $current === $slugs['delivery'] ) {
+	// With the shop's delivery text set, the old page text is not repeated under it.
+	if ( $page_text && $current === $slugs['delivery'] && ! $delivery_text ) {
 		$body .= '<section class="pmx-help__sec pmx-prose">' . $page_text . '</section>';
 	}
 	$exchange = $current === $slugs['exchange'] ? $page_text : promedix_page_content( 'exchange' );

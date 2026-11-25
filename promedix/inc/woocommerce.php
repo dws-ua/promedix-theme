@@ -255,7 +255,7 @@ function promedix_product_accordions() {
 		'delivery' => array(
 			'icon'  => 'truck',
 			'title' => __( 'Доставка', 'promedix' ),
-			'html'  => '<p>' . esc_html__( 'Відправляємо Новою поштою по всій Україні.', 'promedix' ) . '</p><p><a href="' . esc_url( $delivery_url ) . '">' . esc_html__( 'Усе про оплату і доставку', 'promedix' ) . '</a></p>',
+			'html'  => '<p>' . esc_html__( 'Нова Пошта: у відділення, поштомат або кур’єром додому, 1–5 днів. Безкоштовно від 2000 грн.', 'promedix' ) . '</p><p><a href="' . esc_url( $delivery_url ) . '">' . esc_html__( 'Усе про оплату і доставку', 'promedix' ) . '</a></p>',
 		),
 		'sizes' => array(
 			'icon'  => 'ruler',
