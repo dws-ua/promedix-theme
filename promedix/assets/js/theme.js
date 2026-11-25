@@ -87,7 +87,8 @@
           btn.classList.remove('is-loading');
           btn.removeAttribute('aria-busy');
         } else {
-          wrap.remove();
+          /* Keep the (hidden) wrapper: the numbered pagination after it stays visually hidden. */
+          wrap.hidden = true;
         }
         var link = first && first.querySelector('a');
         if (link) link.focus({ preventScroll: true });

@@ -487,7 +487,9 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-loadmore { margin-top: 48px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
 .pmx-loadmore__btn { min-width: 260px; }
 .pmx-loadmore__status { margin: 0; font-size: .875rem; color: var(--text-muted); }
-.pmx-loadmore + nav.woocommerce-pagination, .woocommerce .pmx-loadmore + nav.woocommerce-pagination { margin-top: 24px; }
+/* With "Показати ще" on the page the numbered links stay in the HTML (for crawlers) but are hidden from visitors. */
+.pmx-loadmore ~ nav.woocommerce-pagination, .woocommerce .pmx-loadmore ~ nav.woocommerce-pagination { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; }
+.pmx-loadmore[hidden] { display: none !important; }
 @media (max-width: 600px) { .pmx-loadmore__btn { width: 100%; min-width: 0; } }
 .woocommerce nav.woocommerce-pagination { margin-top: 48px; }
 .woocommerce nav.woocommerce-pagination ul { border: 0 !important; display: flex !important; gap: 8px; justify-content: center; }
