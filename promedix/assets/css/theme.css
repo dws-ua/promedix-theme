@@ -616,8 +616,9 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
   .woocommerce-product-gallery > * { grid-column: 1; }
   .woocommerce div.product div.images .flex-control-thumbs { grid-row: auto; flex-direction: row; overflow-x: auto; max-height: none; }
   .woocommerce div.product div.images .flex-control-thumbs li, .woocommerce div.product div.images .flex-control-thumbs img { width: 72px !important; height: 72px; }
-  .pmx-tabs__list { display: flex; overflow-x: auto; flex-wrap: nowrap; }
-  .pmx-tabs__list [role="tab"] { flex: none; }
+  .pmx-tabs__list { display: flex; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .pmx-tabs__list::-webkit-scrollbar { display: none; }
+  .pmx-tabs__list [role="tab"] { flex: none; white-space: nowrap; }
 }
 @media (max-width: 781px) {
   .pmx-woo--single .single_variation_wrap .woocommerce-variation-add-to-cart { position: sticky; bottom: 0; z-index: 20; background: #fff; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); margin: 0 calc(var(--gutter) * -1); padding-left: var(--gutter); padding-right: var(--gutter); border-top: 1px solid var(--border); flex-wrap: nowrap; align-items: center; }
@@ -878,7 +879,8 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
   .woocommerce div.product > .woocommerce-product-gallery, .woocommerce div.product > div.images { grid-row: 1; }
   .woocommerce div.product > div.summary { grid-row: 1 / span 2; position: static !important; }
   .woocommerce div.product > .pmx-tabs { grid-column: 1; grid-row: 2; margin-top: 16px; }
-  .woocommerce div.product > .pmx-tabs .pmx-tabs__list { flex-wrap: wrap; }
+  .woocommerce div.product > .pmx-tabs .pmx-tabs__list { display: flex; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+  .woocommerce div.product > .pmx-tabs .pmx-tabs__list [role="tab"] { flex: none; white-space: nowrap; padding: 0 18px; }
 }
 
 /* Home hero fits the screen on laptops: slider controls and the profession strip stay visible above the fold. */

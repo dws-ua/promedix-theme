@@ -465,8 +465,7 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 		$tabs = array_slice( $tabs, 0, 3, true ) + array( 'care' => array( __( 'Догляд', 'promedix' ), $care ) ) + array_slice( $tabs, 3, null, true );
 	}
 	$tabs_sizes = promedix_size_guide_html( get_the_ID() );
-	// "Розмірна сітка" right after "Характеристики": the table only, the how-to lives in the dialog.
-	$tabs = array_slice( $tabs, 0, 2, true ) + array( 'sizes' => array( __( 'Розмірна сітка', 'promedix' ), promedix_size_guide_html( get_the_ID(), false ) ) ) + array_slice( $tabs, 2, null, true );
+	// No "Розмірна сітка" tab: the size tables live in the «Як обрати розмір» dialog next to the sizes.
 	if ( ! $tabs ) {
 		return;
 	}
