@@ -1188,3 +1188,21 @@ a.pmx-minicart__name:hover { color: var(--primary); text-decoration: underline; 
 .woocommerce div.product form.cart .single_add_to_cart_button.is-loading::after { content: ""; position: absolute; left: calc(50% - 10px); top: calc(50% - 10px); width: 20px; height: 20px; border: 2.5px solid #fff; border-right-color: transparent; border-radius: 50%; animation: pmx-spin .7s linear infinite; }
 .pmx-atc-err { flex: 1 1 100%; margin: 0; color: var(--error); font-weight: 700; font-size: .875rem; }
 .pmx-atc-err[hidden] { display: none; }
+
+/* ---------- Cart on phones (3.7.2) ---------- */
+@media (max-width: 768px) {
+  /* Coupon: field and button each on their own full-width line, the button label on one line. */
+  .woocommerce table.cart td.actions .coupon { display: flex; flex-direction: column; align-items: stretch; gap: 10px; float: none; width: 100%; }
+  .woocommerce table.cart td.actions .coupon input.input-text { width: 100% !important; float: none; margin: 0 !important; }
+  .woocommerce table.cart td.actions .coupon .button { width: 100%; float: none; white-space: nowrap; margin: 0 !important; }
+  .woocommerce table.cart td.actions > .button { width: 100%; margin-top: 10px !important; }
+  /* "Відправлення": title on its own line above the methods, everything left-aligned. */
+  .woocommerce table.shop_table_responsive tr.woocommerce-shipping-totals td,
+  .woocommerce-page table.shop_table_responsive tr.woocommerce-shipping-totals td { text-align: left !important; }
+  .woocommerce table.shop_table_responsive tr.woocommerce-shipping-totals td::before,
+  .woocommerce-page table.shop_table_responsive tr.woocommerce-shipping-totals td::before { float: none; display: block; margin: 0 0 10px; color: var(--heading); }
+  .woocommerce tr.woocommerce-shipping-totals ul#shipping_method li { justify-content: flex-start; text-align: left; }
+  .woocommerce tr.woocommerce-shipping-totals ul#shipping_method li label { font-weight: 600; }
+  .woocommerce tr.woocommerce-shipping-totals .woocommerce-shipping-destination { margin: 6px 0 0; font-size: .875rem; font-weight: 500; color: var(--text-muted); text-align: left; }
+  .woocommerce tr.woocommerce-shipping-totals .woocommerce-shipping-calculator { text-align: left; }
+}
