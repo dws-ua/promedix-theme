@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PROMEDIX_VERSION', '3.6.5' );
+define( 'PROMEDIX_VERSION', '3.7.2' );
 
 require_once get_theme_file_path( 'inc/helpers.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
@@ -19,6 +19,7 @@ require_once get_theme_file_path( 'inc/sizes.php' );
 require_once get_theme_file_path( 'inc/woo-v3.php' );
 require_once get_theme_file_path( 'inc/quick-order.php' );
 require_once get_theme_file_path( 'inc/mobile.php' );
+require_once get_theme_file_path( 'inc/minicart.php' );
 
 /**
  * Theme setup.

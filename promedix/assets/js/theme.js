@@ -624,3 +624,67 @@
       .then(function () { go.disabled = false; go.classList.remove('is-loading'); });
   });
 })();
+
+/* "Додати в кошик" on the product page: add by AJAX and open the mini-cart panel on the right. */
+(function () {
+  var dlg = document.getElementById('pmx-minicart');
+  if (!dlg || !window.fetch || !window.FormData) return;
+  var url = dlg.getAttribute('data-ajax');
+  function close() { if (dlg.open) { dlg.classList.add('is-closing'); setTimeout(function () { dlg.classList.remove('is-closing'); if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }, 200); } }
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+  dlg.addEventListener('cancel', function (e) { e.preventDefault(); close(); });
+  dlg.querySelectorAll('form[method=dialog]').forEach(function (f) { f.addEventListener('submit', function (e) { e.preventDefault(); close(); }); });
+  document.addEventListener('change', function (e) {
+    var err = e.target.closest && e.target.closest('form.cart') && e.target.closest('form.cart').querySelector('.pmx-atc-err');
+    if (err) err.hidden = true;
+  });
+
+  function applyFragments(fr) {
+    Object.keys(fr || {}).forEach(function (sel) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        var t = document.createElement('template');
+        t.innerHTML = String(fr[sel]).trim();
+        if (t.content.firstElementChild) el.replaceWith(t.content.firstElementChild.cloneNode(true));
+      });
+    });
+  }
+
+  document.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (!form.matches || !form.matches('form.cart') || !form.closest('.product')) return;
+    if (form.closest('.grouped_form') || form.querySelector('input[name^="quantity["]')) return;
+    var btn = form.querySelector('button.single_add_to_cart_button');
+    if (!btn || btn.classList.contains('disabled')) return;
+    var pid = (form.querySelector('[name=add-to-cart]') || {}).value || form.getAttribute('data-product_id');
+    if (!pid) return;
+    e.preventDefault();
+    if (btn.classList.contains('is-loading')) return;
+    var fd = new FormData(form);
+    fd.delete('add-to-cart');
+    if (!fd.get('product_id')) fd.set('product_id', pid);
+    fd.set('action', 'pmx_add_to_cart');
+    btn.classList.add('is-loading'); btn.setAttribute('aria-busy', 'true');
+    var errEl = form.querySelector('.pmx-atc-err');
+    if (!errEl) { errEl = document.createElement('p'); errEl.className = 'pmx-atc-err'; errEl.setAttribute('role', 'alert'); errEl.hidden = true; btn.insertAdjacentElement('afterend', errEl); }
+    errEl.hidden = true;
+    function fail(msg) { errEl.textContent = msg || 'Не вдалося додати товар. Оновіть сторінку і спробуйте ще раз.'; errEl.hidden = false; }
+    fetch(url, { method: 'POST', body: fd, credentials: 'same-origin' })
+      .then(function (r) {
+        return r.json().then(function (res) {
+          if (!res || !res.success) { fail(res && res.data && res.data.message); return; }
+          var body = dlg.querySelector('[data-pmx-minicart-body]');
+          if (body && res.data.body) { var t = document.createElement('template'); t.innerHTML = res.data.body.trim(); body.replaceWith(t.content.firstElementChild); }
+          applyFragments(res.data.fragments);
+          if (window.jQuery) window.jQuery(document.body).trigger('wc_fragment_refresh');
+          if (dlg.showModal) { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute('open', '');
+          var go = dlg.querySelector('.pmx-minicart__go'); if (go) go.focus();
+        }, function () { fail(); });
+      }, function () {
+        /* No connection to the AJAX endpoint: post the form the usual way. */
+        var h = document.createElement('input'); h.type = 'hidden'; h.name = 'add-to-cart'; h.value = pid;
+        if (!form.querySelector('input[name=add-to-cart]')) form.appendChild(h);
+        form.submit();
+      })
+      .then(function () { btn.classList.remove('is-loading'); btn.removeAttribute('aria-busy'); });
+  });
+})();
