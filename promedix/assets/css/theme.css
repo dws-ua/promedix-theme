@@ -483,6 +483,14 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .woocommerce-error { background: var(--error-bg) !important; color: var(--error) !important; }
 .woocommerce-info::before, .woocommerce-message::before { color: var(--primary) !important; top: 16px !important; left: 20px !important; }
 .woocommerce-error::before { color: var(--error) !important; top: 16px !important; left: 20px !important; }
+/* "Показати ще" above the numbered pagination */
+.pmx-loadmore { margin-top: 48px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.pmx-loadmore__btn { min-width: 260px; }
+.pmx-loadmore__status { margin: 0; font-size: .875rem; color: var(--text-muted); }
+/* With "Показати ще" on the page the numbered links stay in the HTML (for crawlers) but are hidden from visitors. */
+.pmx-loadmore ~ nav.woocommerce-pagination, .woocommerce .pmx-loadmore ~ nav.woocommerce-pagination { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; white-space: nowrap !important; }
+.pmx-loadmore[hidden] { display: none !important; }
+@media (max-width: 600px) { .pmx-loadmore__btn { width: 100%; min-width: 0; } }
 .woocommerce nav.woocommerce-pagination { margin-top: 48px; }
 .woocommerce nav.woocommerce-pagination ul { border: 0 !important; display: flex !important; gap: 8px; justify-content: center; }
 .woocommerce nav.woocommerce-pagination ul li { border: 0 !important; }
@@ -578,6 +586,23 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-tabs__panel table.shop_attributes th, .pmx-tabs__panel table.shop_attributes td { border: 0; border-bottom: 1px solid var(--border); background: transparent !important; padding: 12px 0; font-style: normal; text-align: left; vertical-align: top; }
 .pmx-tabs__panel table.shop_attributes th { width: 40%; font-weight: 700; color: var(--heading); padding-right: 16px; }
 .pmx-tabs__panel table.shop_attributes td p { margin: 0; }
+/* Compact specs: tight rows, label and value close together; two columns of rows on desktop. */
+.pmx-tabs__panel table.shop_attributes { max-width: 1000px; }
+.pmx-tabs__panel table.shop_attributes th, .pmx-tabs__panel table.shop_attributes td { padding: 10px 0 !important; line-height: 1.45; font-size: .9375rem; }
+.pmx-tabs__panel table.shop_attributes th { width: 45%; font-weight: 500; color: var(--text-muted); }
+.pmx-tabs__panel table.shop_attributes td { color: var(--heading); font-weight: 600; }
+.pmx-tabs__panel table.shop_attributes td p, .pmx-prose table.shop_attributes td p { margin: 0 !important; }
+/* Each row is one line: label left, value right (phones too). */
+.pmx-tabs__panel table.shop_attributes, .pmx-tabs__panel table.shop_attributes tbody { display: block; width: 100%; }
+.pmx-tabs__panel table.shop_attributes tr { display: grid; grid-template-columns: minmax(0, 45%) minmax(0, 1fr); column-gap: 12px; align-items: baseline; border-bottom: 1px solid var(--border); margin: 0; }
+.pmx-tabs__panel table.shop_attributes th, .pmx-tabs__panel table.shop_attributes td { display: block; width: auto !important; border-bottom: 0 !important; margin: 0 !important; padding: 9px 0 !important; }
+.pmx-tabs__panel table.shop_attributes td::before { content: none !important; }
+@media (min-width: 900px) {
+  .pmx-tabs__panel table.shop_attributes tbody { display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px; }
+}
+@media (max-width: 781px) {
+  .pmx-tabs__panel table.shop_attributes th, .pmx-tabs__panel table.shop_attributes td { font-size: .875rem; padding: 8px 0 !important; }
+}
 .woocommerce div.product .related, .woocommerce div.product .upsells { margin-top: var(--section); }
 .woocommerce div.product .related > h2, .woocommerce div.product .upsells > h2 { margin-bottom: 24px; }
 .pmx-dialog { border: 0; border-radius: var(--r-lg); padding: 0; max-width: min(520px, calc(100vw - 32px)); box-shadow: 0 24px 64px rgba(20,45,56,.2); color: var(--text); }
@@ -984,3 +1009,136 @@ input[type=checkbox], input[type=radio] { accent-color: var(--primary); width: 2
 .pmx-kroksy { margin-top: 56px; padding-top: 48px; border-top: 1px solid var(--border); }
 .pmx-kroksy__lead { margin: -8px 0 24px; color: var(--text-muted); }
 .pmx-kroksy .pmx-more { margin-top: 16px; }
+
+/* ---------- Mobile: header, drawer, bottom shop bar (3.5.0) ---------- */
+/* The skip link is the header's first child: without this the row got the 24px block gap above it. */
+.pmx-header > * { margin-block: 0 !important; }
+.pmx-logo-link { align-items: center; }
+@media (max-width: 781px) {
+  .pmx-header__row { min-height: 60px; gap: 8px; }
+  .pmx-logo-link { padding: 8px 0; }
+  .pmx-header__actions { gap: 0; margin-right: -10px; }
+  .pmx-header__actions .pmx-icon-btn, .pmx-header__actions .pmx-cart, .pmx-burger { width: 44px; height: 44px; }
+  .pmx-burger { padding: 15px 11px; }
+}
+
+.pmx-drawer { position: fixed; inset: 0; z-index: 1000; }
+.pmx-drawer[hidden] { display: none; }
+.pmx-drawer__overlay { position: absolute; inset: 0; background: rgba(20, 45, 56, .45); opacity: 0; transition: opacity .25s ease; }
+.pmx-drawer__panel { position: absolute; top: 0; bottom: 0; right: 0; width: min(360px, 88vw); background: #fff; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(20, 45, 56, .18); transform: translateX(100%); transition: transform .25s ease; outline: 0; }
+.pmx-drawer.is-open .pmx-drawer__overlay { opacity: 1; }
+.pmx-drawer.is-open .pmx-drawer__panel { transform: none; }
+.pmx-drawer__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 8px 6px var(--gutter); border-bottom: 1px solid var(--border); min-height: 60px; }
+.pmx-drawer__head .pmx-logo { width: 120px !important; height: auto !important; }
+.pmx-drawer__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 8px var(--gutter) calc(24px + env(safe-area-inset-bottom)); }
+.pmx-drawer__menu ul { list-style: none; margin: 0; padding: 0; }
+.pmx-drawer__menu a { display: flex; align-items: center; min-height: 50px; color: var(--heading); text-decoration: none; font-weight: 700; font-size: 1.0625rem; border-bottom: 1px solid var(--border); }
+.pmx-drawer__menu .sub-menu a { font-weight: 500; font-size: 1rem; padding-left: 16px; min-height: 44px; }
+.pmx-drawer__menu .current-menu-item > a { color: var(--primary); }
+.pmx-drawer__links { list-style: none; margin: 16px 0 0; padding: 0; }
+.pmx-drawer__links a { display: flex; align-items: center; gap: 12px; min-height: 44px; color: var(--text); text-decoration: none; font-weight: 500; }
+.pmx-drawer__links .pmx-ico { color: var(--primary); flex: none; }
+.pmx-drawer__contacts { margin-top: 20px; padding: 16px; border-radius: var(--r-lg, 12px); background: var(--bg-subtle); }
+.pmx-drawer__label { margin: 8px 0 0; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-muted); }
+.pmx-drawer__label:first-child { margin-top: 0; }
+.pmx-drawer__phone { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 1.125rem; font-weight: 800; color: var(--heading); text-decoration: none; }
+.pmx-drawer__phone .pmx-ico, .pmx-drawer__line .pmx-ico { color: var(--primary); flex: none; }
+.pmx-drawer__line { display: flex; align-items: flex-start; gap: 10px; margin: 8px 0 0; color: var(--text); text-decoration: none; font-size: .9375rem; line-height: 1.45; overflow-wrap: anywhere; }
+a.pmx-drawer__line { align-items: center; min-height: 40px; }
+.pmx-drawer__social { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+.pmx-drawer__social a { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 18px; border: 1.5px solid var(--border); background: #fff; color: var(--heading); font-weight: 700; font-size: .875rem; text-decoration: none; }
+.pmx-drawer .pmx-lang { margin: 16px 0 0; font-size: .9375rem; gap: 10px; }
+html.pmx-drawer-open, html.pmx-drawer-open body { overflow: hidden; }
+html.pmx-drawer-open #unitalk-root { visibility: hidden; }
+
+.pmx-bnav { display: none; }
+@media (max-width: 781px) {
+  .pmx-bnav { display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; background: rgba(255, 255, 255, .97); border-top: 1px solid var(--border); box-shadow: 0 -6px 20px rgba(20, 45, 56, .06); padding-bottom: env(safe-area-inset-bottom); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .pmx-bnav ul { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; list-style: none; margin: 0; padding: 0; }
+  .pmx-bnav a, .pmx-bnav button { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 100%; min-height: 58px; padding: 6px 2px; border: 0; background: transparent; color: var(--text-muted); font: inherit; font-size: .6875rem; font-weight: 700; line-height: 1.2; text-decoration: none; cursor: pointer; }
+  .pmx-bnav [aria-current="page"] { color: var(--primary); }
+  .pmx-bnav .pmx-ico { width: 24px; height: 24px; }
+  .pmx-bnav__count { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--primary); color: #fff; font-size: 11px; line-height: 18px; text-align: center; }
+  .pmx-bnav__count[hidden] { display: none; }
+  body.pmx-has-bnav { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 781px) {
+  /* Sticky "Додати в кошик" on the product page sits just above the bottom bar. */
+  .pmx-has-bnav .pmx-woo--single .single_variation_wrap .woocommerce-variation-add-to-cart { bottom: calc(58px + env(safe-area-inset-bottom)); padding-bottom: 12px; }
+}
+
+/* ---------- Checkout tidy-up (3.5.1) ---------- */
+.woocommerce form .form-row.pmx-country-single { display: none !important; }
+.woocommerce form .form-row .select2-container { width: 100% !important; }
+.woocommerce form .form-row .woocommerce-input-wrapper { display: block; width: 100%; }
+.woocommerce form .form-row .woocommerce-input-wrapper > strong { display: block; padding: 12px 0; font-weight: 700; color: var(--heading); }
+@media (max-width: 781px) {
+  /* Room for the floating call button under the last footer line. */
+  .pmx-footer__bottom { flex-wrap: wrap; padding-bottom: 76px !important; }
+}
+
+/* ---------- Size guide (3.6.0) ---------- */
+.pmx-dialog--sizes { width: min(880px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - 32px); overflow: hidden; }
+.pmx-dialog--sizes[open] { display: flex; flex-direction: column; }
+.pmx-dialog__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 16px 16px 32px; border-bottom: 1px solid var(--border); background: #fff; flex: none; }
+.pmx-dialog__head h2 { margin: 0; font-size: 1.375rem; }
+.pmx-dialog__head form { margin: 0; }
+.pmx-dialog--sizes .pmx-dialog__in { overflow-y: auto; overscroll-behavior: contain; padding: 24px 32px 28px; }
+.pmx-dialog--sizes .pmx-dialog__in > form .pmx-btn { margin-top: 4px; }
+.pmx-sizeguide { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.pmx-sizeguide h3 { margin-top: 0 !important; }
+.pmx-sizeguide .pmx-sizetable { max-width: none; }
+@media (max-width: 760px) { .pmx-sizeguide { grid-template-columns: 1fr; gap: 8px; } .pmx-dialog__head { padding: 10px 8px 10px 20px; } .pmx-dialog--sizes .pmx-dialog__in { padding: 16px 20px 20px; } }
+.pmx-dialog--sizes h3, .pmx-tabs__panel .pmx-howto + h3 { font-size: 1.125rem; margin: 20px 0 10px; }
+.pmx-dialog--sizes h2 + h3 { margin-top: 0; }
+.pmx-howto { display: flex; gap: 20px; align-items: flex-start; color: var(--heading); }
+.pmx-howto__pic { flex: none; }
+.pmx-howto__steps { margin: 0; padding-left: 1.25em; display: grid; gap: 6px; font-size: .9375rem; line-height: 1.5; color: var(--text); }
+.pmx-sizetable { width: 100%; max-width: 420px; border-collapse: collapse; margin: 0 0 16px; font-size: .9375rem; }
+.pmx-sizetable caption { text-align: left; font-weight: 700; color: var(--heading); padding: 0 0 8px; caption-side: top; }
+.pmx-sizetable th, .pmx-sizetable td { padding: 8px 12px !important; border: 0; border-bottom: 1px solid var(--border); text-align: left; background: transparent; }
+.pmx-sizetable thead th { font-size: .8125rem; font-weight: 700; color: var(--text-muted); background: var(--bg-subtle); }
+.pmx-sizetable tbody th { font-weight: 700; color: var(--heading); width: 40%; }
+.pmx-sizetable tbody tr:nth-child(even) { background: var(--bg-subtle); }
+.pmx-sizetables { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px 32px; margin-top: 16px; }
+.pmx-sizehint { font-size: .9375rem; }
+@media (max-width: 600px) { .pmx-howto { flex-direction: column; gap: 12px; } .pmx-howto__pic { width: 110px; height: 138px; } .pmx-dialog--sizes .pmx-dialog__in { padding: 20px; } }
+.pmx-sizehint { margin-top: 20px; }
+
+/* ---------- Buy block + one-click order (3.6.1) ---------- */
+@media (min-width: 0px) {
+  /* Quantity and "Додати в кошик" in one row, same height; one-click below, full width. */
+  .woocommerce div.product form.cart .woocommerce-variation-add-to-cart, .woocommerce div.product form.cart:not(.variations_form) { flex-wrap: wrap; align-items: stretch; gap: 12px; }
+  .woocommerce div.product form.cart .quantity::before { display: none; }
+  .woocommerce div.product form.cart .quantity { flex: none; }
+  .woocommerce div.product form.cart .pmx-qty__btn, .woocommerce div.product form.cart .pmx-qty .qty { height: 56px !important; min-height: 56px; }
+  .woocommerce div.product form.cart .pmx-qty__btn { width: 44px; }
+  .woocommerce div.product form.cart .pmx-qty .qty { width: 48px; }
+  .woocommerce div.product .single_add_to_cart_button { flex: 1 1 0; min-width: 0; white-space: nowrap; padding-left: 14px !important; padding-right: 14px !important; }
+}
+.woocommerce div.product form.cart .pmx-oneclick { flex: 1 1 100%; width: 100%; min-height: 52px; }
+.pmx-oneclick__need { flex: 1 1 100%; margin: -4px 0 0; color: var(--error); font-weight: 700; font-size: .875rem; }
+.pmx-oneclick__need[hidden] { display: none; }
+@media (max-width: 781px) {
+  /* Sticky bar on phones stays compact: one-click goes under it in the normal flow. */
+  .pmx-woo--single .woocommerce-variation-add-to-cart { flex-wrap: wrap !important; }
+  .woocommerce div.product form.cart .pmx-oneclick { min-height: 44px; padding: 8px 16px !important; }
+}
+.pmx-dialog--oneclick { width: min(460px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - 32px); overflow: hidden; }
+.pmx-dialog--oneclick[open] { display: flex; flex-direction: column; }
+.pmx-dialog--oneclick .pmx-dialog__in { overflow-y: auto; padding: 20px 24px 24px; }
+.pmx-oneclick-form { display: grid; gap: 14px; }
+.pmx-oneclick-form p { margin: 0; }
+.pmx-oneclick-form__what { font-weight: 700; color: var(--heading); }
+.pmx-oneclick-form input[type=text], .pmx-oneclick-form input[type=tel] { min-height: 48px; padding: 0 14px; border: 1.5px solid var(--control-border); border-radius: var(--r-sm); font: inherit; color: var(--heading); background: #fff; }
+.pmx-oneclick-form input:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+.pmx-oneclick-form__go { width: 100%; }
+.pmx-oneclick-form__err { color: var(--error); font-weight: 700; font-size: .875rem; }
+.pmx-oneclick-form__or { font-size: .875rem; color: var(--text-muted); text-align: center; }
+.pmx-oc-hp { position: absolute !important; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.pmx-oneclick-done { padding: 12px 0; font-size: 1.0625rem; font-weight: 700; color: var(--heading); }
+.pmx-credit { margin: 0; font-size: .75rem; color: var(--text-muted); }
+.pmx-credit a { color: inherit; text-decoration: none; }
+.pmx-credit a:hover { color: var(--primary); text-decoration: underline; }
+/* Full product name in cards (women's / men's 601 look alike otherwise); up to 2 lines keep the prices aligned. */
+.woocommerce ul.products li.product .woocommerce-loop-product__title { min-height: calc(2 * 1.47em); overflow-wrap: anywhere; }

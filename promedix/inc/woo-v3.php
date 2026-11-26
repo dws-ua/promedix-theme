@@ -89,6 +89,47 @@ function promedix_archive_base_url() {
 	return function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/shop/' );
 }
 
+/**
+ * WPML: attribute terms come in a uk and a ru copy (e.g. "35" and "35-ru"), and
+ * products can carry both. Map every term to its current-language version and
+ * keep each one once, so the filter does not list sizes, colours or prints twice
+ * or in Russian on the Ukrainian site.
+ */
+function promedix_lang_terms( $terms, $tax ) {
+	$out  = array();
+	$lang = apply_filters( 'wpml_current_language', null );
+	foreach ( (array) $terms as $term ) {
+		if ( ! $term instanceof WP_Term ) {
+			continue;
+		}
+		$id = (int) apply_filters( 'wpml_object_id', $term->term_id, $tax, true );
+		if ( $id && $id !== (int) $term->term_id ) {
+			$tr   = get_term( $id, $tax );
+			$term = $tr instanceof WP_Term ? $tr : $term;
+		}
+		// A copy in another language with no translation link: drop it.
+		if ( $lang ) {
+			$tl = apply_filters( 'wpml_element_language_code', null, array( 'element_id' => (int) $term->term_taxonomy_id, 'element_type' => 'tax_' . $tax ) );
+			if ( $tl && $tl !== $lang ) {
+				continue;
+			}
+		}
+		// No products carry it (e.g. only its other-language copy is used).
+		if ( isset( $term->count ) && 0 === (int) $term->count ) {
+			continue;
+		}
+		$key = $term->term_id;
+		// Same visible name twice (no WPML link between the copies): keep the first.
+		foreach ( $out as $o ) {
+			if ( $o->name === $term->name ) {
+				continue 2;
+			}
+		}
+		$out[ $key ] = $term;
+	}
+	return array_values( $out );
+}
+
 /** Price range of the products in the current archive (from the WooCommerce lookup table). */
 function promedix_archive_price_range( $ids ) {
 	global $wpdb;
@@ -119,11 +160,7 @@ function promedix_sc_filters_v3() {
 		if ( is_wp_error( $t ) ) {
 			return array();
 		}
-		$u = array();
-		foreach ( $t as $term ) {
-			$u[ $term->term_id ] = $term;
-		}
-		return array_values( $u );
+		return promedix_lang_terms( $t, $tax );
 	};
 	$groups = '';
 	$n_on   = 0;
@@ -308,6 +345,43 @@ add_filter( 'woocommerce_pagination_args', function ( $args ) {
 	return $args;
 } );
 
+/*
+ * "Показати ще" above the numbered pagination. It is a real link to the next
+ * page (works without JS, keeps the paginated URLs for SEO); theme.js turns it
+ * into a fetch that appends the next page's cards to the grid.
+ */
+function promedix_loadmore_label() {
+	$label = __( 'Показати ще', 'promedix' );
+	$lang  = apply_filters( 'wpml_current_language', null );
+	if ( 'ru' === $lang && 'Показати ще' === $label ) {
+		$label = 'Показать ещё';
+	}
+	return $label;
+}
+function promedix_loadmore_status( $shown, $total ) {
+	$lang = apply_filters( 'wpml_current_language', null );
+	$tpl  = __( 'Показано %1$d з %2$d', 'promedix' );
+	if ( 'ru' === $lang && 'Показано %1$d з %2$d' === $tpl ) {
+		$tpl = 'Показано %1$d из %2$d';
+	}
+	return sprintf( $tpl, $shown, $total );
+}
+add_action( 'woocommerce_after_shop_loop', function () {
+	$total_pages = (int) wc_get_loop_prop( 'total_pages' );
+	$current     = max( 1, (int) wc_get_loop_prop( 'current_page' ) );
+	if ( $total_pages < 2 || $current >= $total_pages ) {
+		return;
+	}
+	$total = (int) wc_get_loop_prop( 'total' );
+	$per   = max( 1, (int) wc_get_loop_prop( 'per_page' ) );
+	$shown = min( $total, $current * $per );
+	$next  = remove_query_arg( 'add-to-cart', get_pagenum_link( $current + 1, false ) );
+	echo '<div class="pmx-loadmore" data-pmx-loadmore-wrap>'
+		. '<a class="pmx-btn pmx-btn--secondary pmx-loadmore__btn" href="' . esc_url( $next ) . '" data-pmx-loadmore>' . esc_html( promedix_loadmore_label() ) . '</a>'
+		. '<p class="pmx-loadmore__status" aria-live="polite" data-pmx-loadmore-status data-total="' . esc_attr( $total ) . '">' . esc_html( promedix_loadmore_status( $shown, $total ) ) . '</p>'
+		. '</div>';
+}, 8 );
+
 /* Loop images: fixed dimensions + lazy below the fold (WooCommerce already prints width/height). */
 add_filter( 'woocommerce_loop_add_to_cart_link', '__return_empty_string' );
 
@@ -362,7 +436,10 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 	}
 	$m        = promedix_shop_methods();
 	$delivery = '';
-	if ( $m['shipping'] ) {
+	$delivery_text = promedix_delivery_html();
+	if ( $delivery_text ) {
+		$delivery .= $delivery_text;
+	} elseif ( $m['shipping'] ) {
 		$delivery .= '<h3>' . esc_html__( 'Доставка', 'promedix' ) . '</h3><ul>';
 		foreach ( $m['shipping'] as $s ) {
 			$delivery .= '<li>' . esc_html( $s[0] ) . '</li>';
@@ -387,11 +464,9 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 	if ( $care ) {
 		$tabs = array_slice( $tabs, 0, 3, true ) + array( 'care' => array( __( 'Догляд', 'promedix' ), $care ) ) + array_slice( $tabs, 3, null, true );
 	}
-	$c          = promedix_contacts();
-	$tabs_sizes = '<p>' . esc_html__( 'Не впевнені щодо розміру? Зателефонуйте, і ми допоможемо підібрати пару:', 'promedix' ) . ' <a href="tel:' . esc_attr( $c['phone_retail_href'] ) . '">' . esc_html( $c['phone_retail'] ) . '</a>.</p>';
-	if ( promedix_link( 'exchange' ) ) {
-		$tabs_sizes .= '<p><a href="' . esc_url( promedix_link( 'exchange' ) ) . '">' . esc_html__( 'Умови обміну, якщо розмір не підійшов', 'promedix' ) . '</a></p>';
-	}
+	$tabs_sizes = promedix_size_guide_html( get_the_ID() );
+	// "Розмірна сітка" right after "Характеристики": the table only, the how-to lives in the dialog.
+	$tabs = array_slice( $tabs, 0, 2, true ) + array( 'sizes' => array( __( 'Розмірна сітка', 'promedix' ), promedix_size_guide_html( get_the_ID(), false ) ) ) + array_slice( $tabs, 2, null, true );
 	if ( ! $tabs ) {
 		return;
 	}
@@ -408,7 +483,7 @@ add_action( 'woocommerce_after_single_product_summary', function () {
 		$i++;
 	}
 	echo '</section>';
-	echo '<dialog class="pmx-dialog" id="pmx-size-dialog" aria-labelledby="pmx-size-dialog-t"><div class="pmx-dialog__in"><h2 id="pmx-size-dialog-t">' . esc_html__( 'Як обрати розмір', 'promedix' ) . '</h2>' . $tabs_sizes . '<form method="dialog"><button class="pmx-btn">' . esc_html__( 'Зрозуміло', 'promedix' ) . '</button></form></div></dialog>'; // phpcs:ignore
+	echo '<dialog class="pmx-dialog pmx-dialog--sizes" id="pmx-size-dialog" aria-labelledby="pmx-size-dialog-t"><div class="pmx-dialog__head"><h2 id="pmx-size-dialog-t">' . esc_html__( 'Як обрати розмір', 'promedix' ) . '</h2><form method="dialog"><button class="pmx-icon-btn pmx-dialog__x" aria-label="' . esc_attr__( 'Закрити', 'promedix' ) . '"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form></div><div class="pmx-dialog__in">' . $tabs_sizes . '<form method="dialog"><button class="pmx-btn">' . esc_html__( 'Зрозуміло', 'promedix' ) . '</button></form></div></dialog>'; // phpcs:ignore
 }, 10 );
 
 add_filter( 'woocommerce_output_related_products_args', function ( $a ) {

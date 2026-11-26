@@ -426,6 +426,15 @@ function promedix_shop_methods() {
 	return $out;
 }
 
+/**
+ * Shop's own delivery text (site option promedix_delivery_html), used by the
+ * product tab (the help page shows the page's own content). Empty string when not set.
+ */
+function promedix_delivery_html() {
+	$html = trim( (string) get_option( 'promedix_delivery_html', '' ) );
+	return '' === $html ? '' : wp_kses_post( wpautop( $html ) );
+}
+
 function promedix_page_content( $key ) {
 	$slugs = promedix_page_slugs();
 	$page  = isset( $slugs[ $key ] ) ? get_page_by_path( $slugs[ $key ] ) : null;
@@ -486,6 +495,7 @@ add_shortcode( 'promedix_help', function () {
 	$body    .= '<section id="pmx-help-exchange" class="pmx-help__sec"><h2>' . esc_html__( 'Обмін і повернення', 'promedix' ) . '</h2>'
 		. ( $exchange ? '<details class="pmx-acc__item pmx-acc--single"' . ( $current === $slugs['exchange'] ? ' open' : '' ) . '><summary><span>' . esc_html__( 'Умови обміну та повернення', 'promedix' ) . '</span></summary><div class="pmx-acc__body pmx-prose">' . $exchange . '</div></details>' : '' )
 		. '</section>';
+	$body .= '<section id="pmx-help-sizechart" class="pmx-help__sec"><h2>' . esc_html__( 'Розмірна сітка', 'promedix' ) . '</h2><h3>' . esc_html__( 'Як виміряти стопу', 'promedix' ) . '</h3>' . promedix_size_howto_html() . promedix_size_all_tables_html() . '</section>';
 	$body .= '<section id="pmx-help-size" class="pmx-help__sec"><div class="pmx-sizehelp"><div><h2>' . esc_html__( 'Допомога з розміром', 'promedix' ) . '</h2><p>' . esc_html__( 'Не впевнені щодо розміру? Зателефонуйте нам, і ми підкажемо, яку пару обрати.', 'promedix' ) . '</p>'
 		. '<a class="pmx-btn pmx-btn--secondary" href="tel:' . esc_attr( $c['phone_retail_href'] ) . '">' . promedix_ui_icon( 'phone', 20 ) . esc_html( $c['phone_retail'] ) . '</a></div></div></section>';
 	$faq = array(

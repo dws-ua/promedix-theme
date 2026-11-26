@@ -6,6 +6,8 @@
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-pmx-toggle]');
     if (!t) return;
+    /* Burger opens the off-canvas drawer when the theme printed one. */
+    if (t.classList.contains('pmx-burger') && document.getElementById('pmx-drawer')) { openDrawer(t); return; }
     var target = document.getElementById(t.getAttribute('aria-controls'));
     if (!target) return;
     var open = t.getAttribute('aria-expanded') === 'true';
@@ -16,6 +18,52 @@
       if (input) input.focus();
     }
   });
+  /* Off-canvas drawer: menu, contacts, language. */
+  var drawerOpener = null;
+  function openDrawer(opener) {
+    var d = document.getElementById('pmx-drawer');
+    if (!d) return;
+    drawerOpener = opener || null;
+    d.hidden = false;
+    document.documentElement.classList.add('pmx-drawer-open');
+    if (opener) opener.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(function () { d.classList.add('is-open'); });
+    var close = d.querySelector('.pmx-drawer__close');
+    if (close) close.focus();
+  }
+  function closeDrawer() {
+    var d = document.getElementById('pmx-drawer');
+    if (!d || d.hidden) return;
+    d.classList.remove('is-open');
+    document.documentElement.classList.remove('pmx-drawer-open');
+    document.querySelectorAll('.pmx-burger').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+    setTimeout(function () { d.hidden = true; }, 250);
+    if (drawerOpener) drawerOpener.focus();
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-pmx-drawer-close]')) { closeDrawer(); return; }
+    /* A link inside the drawer: close it (same-page anchors otherwise stay hidden behind it). */
+    if (e.target.closest('#pmx-drawer a')) closeDrawer();
+  });
+  document.addEventListener('keydown', function (e) {
+    var d = document.getElementById('pmx-drawer');
+    if (!d || d.hidden) return;
+    if (e.key === 'Escape') { closeDrawer(); return; }
+    if (e.key !== 'Tab') return;
+    var f = d.querySelectorAll('a[href], button:not([disabled]), input, select');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  /* Bottom bar: search opens the header search panel. */
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-pmx-bnav-search]')) return;
+    var t = document.querySelector('.pmx-header [aria-controls="pmx-search-panel"]');
+    if (t) { window.scrollTo({ top: 0, behavior: 'smooth' }); if (t.getAttribute('aria-expanded') !== 'true') t.click(); else { var i = document.querySelector('#pmx-search-panel input[type=search]'); if (i) i.focus(); } }
+  });
+
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     document.querySelectorAll('[data-pmx-toggle][aria-expanded="true"]').forEach(function (t) { t.click(); });
@@ -24,7 +72,11 @@
   /* Favourites: heart on product cards and gallery, remembered in this browser. */
   var KEY = 'pmx-fav';
   function favs() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (err) { return []; } }
-  function saveFavs(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (err) {} }
+  function favCount() {
+    var n = favs().length;
+    document.querySelectorAll('.pmx-bnav__count--fav').forEach(function (el) { el.textContent = n; el.hidden = !n; });
+  }
+  function saveFavs(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (err) {} favCount(); }
   function productId(el) {
     var m = (el.className || '').match(/post-(\d+)/);
     return m ? m[1] : null;
@@ -39,9 +91,62 @@
     b.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>';
     return b;
   }
-  document.querySelectorAll('ul.products li.product').forEach(function (li) {
-    var id = productId(li);
-    if (id && !li.querySelector('.pmx-fav')) li.appendChild(heart(id));
+  function addHearts(root) {
+    root.querySelectorAll('li.product').forEach(function (li) {
+      var id = productId(li);
+      if (id && !li.querySelector('.pmx-fav')) li.appendChild(heart(id));
+    });
+  }
+  document.querySelectorAll('ul.products').forEach(addHearts);
+  favCount();
+
+  /* "Показати ще": fetch the next catalog page and append its cards to the grid.
+     The button is a plain link to ?page N+1, so without JS (or on error) it just navigates. */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-pmx-loadmore]');
+    if (!btn || !window.fetch || !window.DOMParser) return;
+    var wrap = btn.closest('[data-pmx-loadmore-wrap]');
+    var scope = wrap && wrap.parentNode;
+    var grid = scope && scope.querySelector('ul.products');
+    if (!grid) return;
+    e.preventDefault();
+    if (btn.classList.contains('is-loading')) return;
+    btn.classList.add('is-loading');
+    btn.setAttribute('aria-busy', 'true');
+    var url = btn.href;
+    fetch(url, { credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var items = doc.querySelectorAll('ul.products li.product');
+        if (!items.length) throw new Error('empty');
+        var first = null;
+        items.forEach(function (li) {
+          var node = document.importNode(li, true);
+          grid.appendChild(node);
+          if (!first) first = node;
+        });
+        addHearts(grid);
+        /* Numbered pagination follows the last loaded page. */
+        var navOld = scope.querySelector('nav.woocommerce-pagination');
+        var navNew = doc.querySelector('nav.woocommerce-pagination');
+        if (navOld && navNew) navOld.replaceWith(document.importNode(navNew, true));
+        var status = wrap.querySelector('[data-pmx-loadmore-status]');
+        var nextBtn = doc.querySelector('[data-pmx-loadmore]');
+        if (nextBtn) {
+          btn.href = nextBtn.getAttribute('href');
+          var nextStatus = doc.querySelector('[data-pmx-loadmore-status]');
+          if (status && nextStatus) status.textContent = nextStatus.textContent;
+          btn.classList.remove('is-loading');
+          btn.removeAttribute('aria-busy');
+        } else {
+          /* Keep the (hidden) wrapper: the numbered pagination after it stays visually hidden. */
+          wrap.hidden = true;
+        }
+        var link = first && first.querySelector('a');
+        if (link) link.focus({ preventScroll: true });
+      })
+      .catch(function () { location.href = url; });
   });
   var single = document.querySelector('div.product[id^="product-"]');
   var gallery = single && single.querySelector('.woocommerce-product-gallery');
@@ -120,6 +225,11 @@
       a.className = 'pmx-size-link';
       a.innerHTML = '<svg class="pmx-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 15 15 3l6 6L9 21z"/><path d="m7 11 2 2M10 8l2 2M13 5l2 2"/></svg><span>Як обрати розмір</span>';
       a.addEventListener('click', function () { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
+      /* Click on the dimmed backdrop (the dialog element itself, outside its content) closes it. */
+      if (!dlg.dataset.pmxBackdrop) {
+        dlg.dataset.pmxBackdrop = '1';
+        dlg.addEventListener('click', function (e) { if (e.target === dlg && dlg.close) dlg.close(); });
+      }
       tbl.parentNode.insertBefore(a, tbl.nextSibling);
     }
   }
@@ -407,5 +517,110 @@
       var btn = form.querySelector('[type=submit]');
       if (btn) { btn.disabled = true; btn.classList.add('is-loading'); btn.setAttribute('aria-busy', 'true'); }
     });
+  });
+})();
+
+/* Bottom bar vs third-party floating buttons (Unitalk call button etc.):
+   lift any fixed element that would sit on top of the bar. */
+(function () {
+  var bar = document.querySelector('.pmx-bnav');
+  if (!bar) return;
+  function lift() {
+    if (getComputedStyle(bar).display === 'none') return;
+    var top = bar.getBoundingClientRect().top;
+    var all = document.body.querySelectorAll('body > *:not(.pmx-bnav):not(.pmx-drawer):not(script):not(style), body > * > *:not(script), #unitalk-root *, #divForNextelButton2 *');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el.closest('.pmx-bnav, .pmx-drawer, .pmx-header, .pmx-filters, .wp-site-blocks, #wpadminbar')) continue;
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'fixed') continue;
+      var r = el.getBoundingClientRect();
+      if (!r.width || !r.height || r.height > window.innerHeight / 2) continue;
+      var cur = parseFloat(el.dataset.pmxLift || '0');
+      var overlap = r.bottom + cur - top + 12;
+      if (overlap > 0 && Math.abs(overlap - cur) > 1) {
+        el.dataset.pmxLift = overlap;
+        el.style.setProperty('translate', '0 ' + (-overlap) + 'px', 'important');
+      }
+    }
+  }
+  var t;
+  function soon() { clearTimeout(t); t = setTimeout(lift, 150); }
+  window.addEventListener('load', function () { lift(); setTimeout(lift, 1500); setTimeout(lift, 4000); });
+  window.addEventListener('resize', soon);
+  if (window.MutationObserver) {
+    var mo = new MutationObserver(function () {
+      soon();
+      var root = document.getElementById('unitalk-root');
+      if (root && !root.dataset.pmxWatched) { root.dataset.pmxWatched = '1'; new MutationObserver(soon).observe(root, { childList: true, subtree: true }); }
+    });
+    mo.observe(document.body, { childList: true });
+  }
+})();
+
+/* "Купити в один клік": take the chosen size from the cart form, ask name + phone, create the order. */
+(function () {
+  var dlg = document.getElementById('pmx-oneclick-dialog');
+  if (!dlg) return;
+  var f = dlg.querySelector('[data-pmx-oneclick-form]');
+  var done = dlg.querySelector('[data-pmx-oneclick-done]');
+  var err = f.querySelector('.pmx-oneclick-form__err');
+  dlg.addEventListener('click', function (e) { if (e.target === dlg && dlg.close) dlg.close(); });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pmx-oneclick]');
+    if (!b) return;
+    e.preventDefault();
+    var cart = b.closest('form.cart');
+    if (!cart) return;
+    var need = cart.querySelector('.pmx-oneclick__need');
+    var vInput = cart.querySelector('input[name=variation_id]');
+    var isVar = cart.classList.contains('variations_form');
+    var vid = vInput ? parseInt(vInput.value, 10) || 0 : 0;
+    if (isVar && !vid) {
+      if (need) need.hidden = false;
+      var tiles = cart.querySelector('.pmx-tiles, table.variations');
+      if (tiles) tiles.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (need) need.hidden = true;
+    var pid = cart.getAttribute('data-product_id') || (cart.querySelector('[name=add-to-cart]') || {}).value || '';
+    var qty = cart.querySelector('input.qty');
+    f.product_id.value = pid;
+    f.variation_id.value = vid || '';
+    f.quantity.value = qty ? qty.value : 1;
+    var title = document.querySelector('.product_title');
+    var size = [];
+    cart.querySelectorAll('table.variations select').forEach(function (s) { if (s.value) size.push(s.options[s.selectedIndex].textContent); });
+    var what = dlg.querySelector('[data-pmx-oneclick-what]');
+    if (what) what.textContent = (title ? title.textContent.trim() : '') + (size.length ? ', розмір ' + size.join(', ') : '') + ', ' + f.quantity.value + ' шт.';
+    f.hidden = false; done.hidden = true; err.hidden = true;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    setTimeout(function () { f.phone.focus(); }, 50);
+  });
+  /* Size picked later: hide the hint. */
+  document.addEventListener('change', function (e) {
+    var cart = e.target.closest && e.target.closest('form.cart');
+    var need = cart && cart.querySelector('.pmx-oneclick__need');
+    if (need) need.hidden = true;
+  });
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var digits = (f.phone.value || '').replace(/\D+/g, '');
+    if (digits.length < 10) { err.textContent = 'Вкажіть номер телефону, наприклад +380 63 100 86 86.'; err.hidden = false; f.phone.focus(); return; }
+    var go = f.querySelector('[type=submit]');
+    go.disabled = true; go.classList.add('is-loading');
+    fetch(f.getAttribute('action'), { method: 'POST', body: new FormData(f), credentials: 'same-origin' })
+      .then(function (r) { return r.json().catch(function () { return { success: false, data: {} }; }); })
+      .then(function (res) {
+        var msg = res && res.data && res.data.message;
+        if (!res || res.success === undefined) msg = 'Не вдалося надіслати (помилка сервера). Зателефонуйте нам, будь ласка.';
+        if (res && res.success) {
+          f.hidden = true; done.textContent = msg || 'Дякуємо! Ми зателефонуємо вам.'; done.hidden = false;
+        } else {
+          err.textContent = msg || 'Не вдалося надіслати. Зателефонуйте нам, будь ласка.'; err.hidden = false;
+        }
+      })
+      .catch(function () { err.textContent = 'Немає з’єднання. Спробуйте ще раз або зателефонуйте нам.'; err.hidden = false; })
+      .then(function () { go.disabled = false; go.classList.remove('is-loading'); });
   });
 })();

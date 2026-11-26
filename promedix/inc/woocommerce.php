@@ -24,17 +24,28 @@ add_action( 'woocommerce_before_cart_totals', function () {
  */
 add_filter( 'woocommerce_billing_fields', function ( $fields ) {
 	if ( isset( $fields['billing_company'] ) ) {
-		$fields['billing_company']['label']    = __( 'Назва закладу або компанії (необов’язково)', 'promedix' );
+		$fields['billing_company']['label']    = __( 'Назва закладу або компанії', 'promedix' );
 		$fields['billing_company']['required'] = false;
 		$fields['billing_company']['priority'] = 25;
 	}
 	$fields['billing_edrpou'] = array(
-		'label'    => __( 'Код ЄДРПОУ для рахунку (необов’язково)', 'promedix' ),
+		'label'    => __( 'Код ЄДРПОУ для рахунку', 'promedix' ),
 		'required' => false,
 		'class'    => array( 'form-row-wide' ),
 		'priority' => 26,
 		'type'     => 'text',
 	);
+	// WooCommerce adds "(необов’язково)" to optional labels itself.
+	// Only one country to ship to: hide the field (its value is still sent).
+	if ( isset( $fields['billing_country'] ) && function_exists( 'WC' ) && WC()->countries && 1 === count( WC()->countries->get_allowed_countries() ) ) {
+		$fields['billing_country']['class'][] = 'pmx-country-single';
+	}
+	return $fields;
+} );
+add_filter( 'woocommerce_shipping_fields', function ( $fields ) {
+	if ( isset( $fields['shipping_country'] ) && function_exists( 'WC' ) && WC()->countries && 1 === count( WC()->countries->get_shipping_countries() ) ) {
+		$fields['shipping_country']['class'][] = 'pmx-country-single';
+	}
 	return $fields;
 } );
 
@@ -255,7 +266,7 @@ function promedix_product_accordions() {
 		'delivery' => array(
 			'icon'  => 'truck',
 			'title' => __( 'Доставка', 'promedix' ),
-			'html'  => '<p>' . esc_html__( 'Відправляємо Новою поштою по всій Україні.', 'promedix' ) . '</p><p><a href="' . esc_url( $delivery_url ) . '">' . esc_html__( 'Усе про оплату і доставку', 'promedix' ) . '</a></p>',
+			'html'  => '<p>' . esc_html__( 'Нова Пошта: у відділення, поштомат або кур’єром додому, 1–5 днів. Безкоштовно від 2000 грн.', 'promedix' ) . '</p><p><a href="' . esc_url( $delivery_url ) . '">' . esc_html__( 'Усе про оплату і доставку', 'promedix' ) . '</a></p>',
 		),
 		'sizes' => array(
 			'icon'  => 'ruler',
@@ -313,7 +324,7 @@ function promedix_short_title( $title ) {
 }
 remove_action( 'woocommerce_shop_loop_item_title', 'woocommerce_template_loop_product_title', 10 );
 add_action( 'woocommerce_shop_loop_item_title', function () {
-	echo '<h2 class="' . esc_attr( apply_filters( 'woocommerce_product_loop_title_classes', 'woocommerce-loop-product__title' ) ) . '">' . esc_html( promedix_short_title( get_the_title() ) ) . '</h2>';
+	echo '<h2 class="' . esc_attr( apply_filters( 'woocommerce_product_loop_title_classes', 'woocommerce-loop-product__title' ) ) . '">' . esc_html( get_the_title() ) . '</h2>';
 }, 10 );
 
 /**
