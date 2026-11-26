@@ -102,9 +102,40 @@ function promedix_oneclick_handle() {
 		$fail( __( 'Не вдалося оформити. Зателефонуйте нам, будь ласка.', 'promedix' ), 500 );
 	}
 
+	promedix_oneclick_send_to_crm( $order );
+
 	wp_send_json_success( array(
 		'message' => sprintf( __( 'Дякуємо! Замовлення №%s прийнято. Ми зателефонуємо вам найближчим часом.', 'promedix' ), $order->get_order_number() ),
 	) );
 }
 add_action( 'wp_ajax_pmx_oneclick', 'promedix_oneclick_handle' );
+
+/*
+ * KeyCRM: the "WooCommerce Keycrm.app" plugin sends orders on
+ * woocommerce_checkout_order_processed, which only the checkout fires.
+ * Call the plugin's own handler for one-click orders. The whole action is not
+ * fired, so other listeners (analytics) don't see a fake checkout.
+ * A CRM failure never breaks the customer's response: the order is already saved.
+ */
+function promedix_oneclick_send_to_crm( $order ) {
+	global $wp_filter;
+	if ( ! class_exists( 'WC_Keycrm_Base' ) || empty( $wp_filter['woocommerce_checkout_order_processed'] ) ) {
+		return;
+	}
+	foreach ( $wp_filter['woocommerce_checkout_order_processed']->callbacks as $callbacks ) {
+		foreach ( $callbacks as $cb ) {
+			$f = $cb['function'];
+			if ( is_array( $f ) && $f[0] instanceof WC_Keycrm_Base && method_exists( $f[0], 'keycrm_process_order' ) ) {
+				ob_start(); // The plugin emits PHP notices for empty address fields.
+				try {
+					$f[0]->keycrm_process_order( $order->get_id() );
+				} catch ( Throwable $e ) {
+					$order->add_order_note( 'KeyCRM: ' . $e->getMessage() );
+				}
+				ob_end_clean();
+				return;
+			}
+		}
+	}
+}
 add_action( 'wp_ajax_nopriv_pmx_oneclick', 'promedix_oneclick_handle' );
