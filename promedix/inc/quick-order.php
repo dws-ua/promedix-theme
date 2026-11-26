@@ -33,7 +33,7 @@ add_action( 'wp_footer', function () {
 		. '<p class="pmx-muted">' . esc_html__( 'Залиште ім’я і телефон: менеджер зателефонує, уточнить доставку й оплату.', 'promedix' ) . '</p>'
 		. '<p class="pmx-field"><label for="pmx-oc-name">' . esc_html__( 'Ім’я', 'promedix' ) . '</label><input id="pmx-oc-name" name="name" type="text" autocomplete="name" maxlength="80"></p>'
 		. '<p class="pmx-field"><label for="pmx-oc-phone">' . esc_html__( 'Телефон', 'promedix' ) . ' <span aria-hidden="true">*</span></label><input id="pmx-oc-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+380 __ ___ __ __" maxlength="20"></p>'
-		. '<p class="pmx-oc-hp" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></p>'
+		. '<div class="pmx-oc-hp" aria-hidden="true" hidden><input name="pmx_hp_x" type="text" tabindex="-1" autocomplete="new-password" value=""></div>'
 		. '<input type="hidden" name="action" value="pmx_oneclick"><input type="hidden" name="nonce" value="' . esc_attr( wp_create_nonce( 'pmx_oneclick' ) ) . '">'
 		. '<input type="hidden" name="product_id" value=""><input type="hidden" name="variation_id" value=""><input type="hidden" name="quantity" value="1">'
 		. '<p class="pmx-oneclick-form__err" role="alert" hidden></p>'
@@ -55,7 +55,7 @@ function promedix_oneclick_handle() {
 	if ( ! check_ajax_referer( 'pmx_oneclick', 'nonce', false ) ) {
 		$fail( __( 'Сторінка застаріла. Оновіть її і спробуйте ще раз або зателефонуйте нам.', 'promedix' ), 403 );
 	}
-	if ( ! empty( $_POST['website'] ) ) { // Honeypot.
+	if ( ! empty( $_POST['pmx_hp_x'] ) ) { // Honeypot (hidden, not autofilled).
 		$fail( __( 'Не вдалося надіслати.', 'promedix' ) );
 	}
 	$ip  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';

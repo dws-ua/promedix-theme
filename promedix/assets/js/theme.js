@@ -609,10 +609,11 @@
     if (digits.length < 10) { err.textContent = 'Вкажіть номер телефону, наприклад +380 63 100 86 86.'; err.hidden = false; f.phone.focus(); return; }
     var go = f.querySelector('[type=submit]');
     go.disabled = true; go.classList.add('is-loading');
-    fetch(f.action, { method: 'POST', body: new FormData(f), credentials: 'same-origin' })
+    fetch(f.getAttribute('action'), { method: 'POST', body: new FormData(f), credentials: 'same-origin' })
       .then(function (r) { return r.json().catch(function () { return { success: false, data: {} }; }); })
       .then(function (res) {
         var msg = res && res.data && res.data.message;
+        if (!res || res.success === undefined) msg = 'Не вдалося надіслати (помилка сервера). Зателефонуйте нам, будь ласка.';
         if (res && res.success) {
           f.hidden = true; done.textContent = msg || 'Дякуємо! Ми зателефонуємо вам.'; done.hidden = false;
         } else {
